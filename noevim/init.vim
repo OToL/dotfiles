@@ -13,13 +13,34 @@ call plug#begin("~/AppData/Local/nvim/plugged")
     Plug 'tpope/vim-dispatch'
 call plug#end()
 
+" Disable compatibility with vi which can cause various issues
+set nocompatible
+
+" Coloring style
+colorscheme gruvbox
 syntax on
+
+" Enable file type detection
+filetype on
+filetype plugin on
+
+" Highlight current line
+set cursorline
 
 " When opening vim, automatically source the vimrc in the current folder
 " Can be used for having project specific settings
 set exrc
 
-colorscheme gruvbox
+" Do not highlight current & last search results
+set nohlsearch
+
+" Change the commands history depth (default=20)
+set history=1000
+
+" Display command mode completion in a buffer instead of contextual menu
+set wildmenu
+set wildmode=list:longest
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 set relativenumber
 set nu
@@ -32,11 +53,11 @@ set colorcolumn=120
 set ignorecase
 set smartcase
 set showmatch
-set nohlsearch
 set incsearch
 set hidden
 set showmode
 set showcmd 
+set nowrap
 
 " Allow local project settings (.vimrc)
 set exrc
@@ -57,6 +78,7 @@ set undofile
 set expandtab
 set tabstop=4 softtabstop=4
 set shiftwidth=4
+set autoindent
 set smartindent
 
 " Show hidden characters
@@ -68,6 +90,33 @@ let g:ctrlp_use_caching = 0
 
 inoremap jk <ESC>
 
+" Delete text without changing default target register value 
+xnoremap <leader>p "_dp
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+vnoremap <leader>d "_d
+
+" Global clipboard
+nnoremap <leader>gy "+y
+vnoremap <leader>gy "+y
+nmap <leader>gY "+Y
+nnoremap <leader>gp "+p
+vnoremap <leader>gp "+p
+nmap <leader>gP "+P
+
+" Center after moves
+nnoremap n nzzzv
+nnoremap N Nzzz
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap <C-f> <C-f>zz
+nnoremap <C-b> <C-b>zz
+nmap * *zz
+nmap # #zz
+cnoremap <silent><expr> <enter> index(['/', '?'], getcmdtype()) >= 0 ? '<enter>zz' : '<enter>'
+nnoremap <expr> <silent> <F4>   (&diff ? "]c" : ":cnext\<CR>zz")
+nnoremap <expr> <silent> <S-F4> (&diff ? "[c" : ":cprev\<CR>zz")
+
 nnoremap <C-Tab> :bnext<CR>
 nnoremap <S-C-Tab> :bprevious<CR>
 nnoremap <Space> <Nop>
@@ -75,15 +124,44 @@ nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
 nnoremap <leader>j :wincmd j<CR>
-nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>pf <cmd>Telescope find_files<cr>
 nnoremap <leader>pg <cmd>Telescope live_grep<cr>
 nnoremap <leader>bf <cmd>Telescope buffers<cr>
 nnoremap <leader>f <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <leader>et :NERDTreeToggle<CR>
 nnoremap <leader>ef :NERDTreeFind<CR>
-nnoremap <expr> <silent> <F4>   (&diff ? "]c" : ":cnext\<CR>")
-nnoremap <expr> <silent> <S-F4> (&diff ? "[c" : ":cprev\<CR>")
+
+" Folding
+" - zo: open current fold
+" - zc: close current fold
+" - zO: open all folds
+" - zC: close all folds
+" - zf: fold
+nnoremap zO zR<ESC>
+nnoremap zC zM<ESC>
+" Yank from cursor to the end of line.
+nnoremap Y y$
+" Pressing the letter o will open a new line below the current one.
+" Exit insert mode after creating a new line above or below the current line.
+nnoremap o o<esc>
+nnoremap O O<esc>
+" Center the cursor vertically when moving to the next word during a search.
+nnoremap n nzz
+nnoremap N Nzz
+
+" Resize split windows using arrow keys by pressing:
+" CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
+noremap <c-up> <c-w>+
+noremap <c-down> <c-w>-
+noremap <c-left> <c-w><
+noremap <c-right> <c-w>>
+
+" Make %% in command mode expand to the current file's path
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h').'/' : '%%'
+" Make ^^ in command mode expand to the file, sans extension
+cnoremap <expr> ^^ getcmdtype() == ':' ? expand('%:p:r') : '^^'
+
+cabbrev vsb vert sb
 
 lua << EOF 
 local actions = require "telescope.actions"
@@ -136,4 +214,19 @@ augroup nerdtree_group
     " Automatically open NERTree at vim startup and change the focus back to the initial buffer
     "autocmd VimEnter * NERDTree | wincmd p
 augroup END
+
+" Clear status line when vimrc is reloaded.
+set statusline=
+
+" Status line left side.
+set statusline+=\ %F\ %M\ %Y\ %R
+
+" Use a divider to separate the left side from the right side.
+set statusline+=%=
+
+" Status line right side.
+set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
+
+" Show the status on the second to last line.
+set laststatus=2
  
