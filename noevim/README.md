@@ -1,5 +1,6 @@
+- Install Git: https://git-scm.com/
 - Install neovim: https://neovim.io/
 - Install neovim 'Plug' package manager: https://github.com/junegunn/vim-plug#windows-powershell
 - Copy dotfiles to neovim user folder ...
-    - Windows: c:\Users\[user]\Documents\dev\dotfiles\noevim\
+    - Windows: ~/AppData/Local/nvim/init.vim
 - Launch neovim and execute :PlugInstall
