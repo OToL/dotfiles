@@ -159,17 +159,17 @@ local mappings = {
     s = {
         name = "Search",
         f = { "<cmd>lua require('telescope.builtin').find_files()<cr>",
-            "Find files", },
+           "Find files", },
         b = { "<cmd>lua require('telescope.builtin').buffers()<cr>",
             "Buffers", },
         B = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
-        c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
+        C = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
         h = { "<cmd>Telescope help_tags<cr>", "Find Help" },
         M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
         r = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },
         R = { "<cmd>Telescope registers<cr>", "Registers" },
         k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-        C = { "<cmd>Telescope commands<cr>", "Commands" },
+        c = { "<cmd>Telescope commands<cr>", "Commands" },
     },
 
     t = {

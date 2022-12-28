@@ -92,11 +92,11 @@ nmap("][", "][zz", default_opts)
 
 -- location list is local to a buffer (e.g. search results in current file) as opposed to quick-fix which is cross buffer (e.g. project compilation errors)
 -- quick-fix list (:copen, :cclose/ccl, etc.) navigation
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
 -- location list (:lopen, :lclose/lcl, etc.) navigation
-vim.keymap.set("n", "<A-k>", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<A-j>", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<A-j>", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<A-k>", "<cmd>lprev<CR>zz")
 -- old quick-fix list navigation hooks
 -- nmap("<F4>", '(&diff ? "]c" : ":cnext<CR>zz")', {expr=true, noremap = true, silent = true})
 -- nmap("<S-F4>", '(&diff ? "[c" : ":cprev<CR>zz")', {expr=true, noremap = true, silent = true})
