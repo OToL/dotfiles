@@ -1,6 +1,5 @@
 - Install Git: https://git-scm.com/
 - Install neovim: https://neovim.io/
-- Install neovim 'Plug' package manager: https://github.com/junegunn/vim-plug#windows-powershell
 - Copy dotfiles to neovim user folder ...
-    - Windows: ~/AppData/Local/nvim/init.vim
-- Launch neovim and execute :PlugInstall
+    - Windows: ~/AppData/Local/nvim
+- Launch neovim twice because some plugins are compiling/downloading utilities (e.g. treesitter, lsp, etc.) the first time it is executed
