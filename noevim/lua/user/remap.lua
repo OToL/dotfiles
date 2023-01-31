@@ -1,105 +1,65 @@
 -- more key mappings can be found in 'whichkey.lua
-
--- noremap=true means that the command is not recursively expanded based on other remap
-local default_opts = { noremap = true, silent = false }
-local term_opts = { silent = false }
-local map = vim.api.nvim_set_keymap
-
+ 
 -- prevent space from moving the cursor forward
-map("", "<space>", "<nop>", default_opts)
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- remap space as leader key
 vim.g.maplocalleader = " "
 vim.g.mapleader = " "
 
--- normal mode remap
-local function nmap(shortcut, command, opts)
-  map('n', shortcut, command, opts)
-end
-
--- insert mode remap
-local function imap(shortcut, command, opts)
-  map('i', shortcut, command, opts)
-end
-
--- terminal mode remap
-local function tmap(shortcut, command, opts)
-  map('t', shortcut, command, opts)
-end
-
--- visual mode remap
-local function vmap(shortcut, command, opts)
-  map('v', shortcut, command, opts)
-end
-
--- visual block mode remap
-local function xmap(shortcut, command, opts)
-  map('x', shortcut, command, opts)
-end
-
--- command mode remap
-local function cmap(shortcut, command, opts)
-  map('c', shortcut, command, opts)
-end
-
-------------
--- NEOVIM --
-------------
-
 -- more practical insert mode exit
-imap("jk", "<ESC>", default_opts)
-tmap("jk", "<C-\\><C-n>", term_opts)
+vim.keymap.set('i', "jk", "<ESC>")
+vim.keymap.set('t', "jk", "<C-\\><C-n>", {silent = false})
 
 -- visual studio block move up/down
-vmap("J", ":m '>+1<CR>gv=gv", default_opts)
-vmap("K", ":m '<-2<CR>gv=gv", default_opts)
+vim.keymap.set('v', "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', "K", ":m '<-2<CR>gv=gv")
 
 -- keep the cursor at its current position after joing lines
-nmap("J", "mzJ`z", default_opts)
+vim.keymap.set('n', "J", "mzJ`z")
 
 -- simpler windows navigation
-nmap("<leader>h", "<C-w>h", default_opts)
-nmap("<leader>j", "<C-w>j", default_opts)
-nmap("<leader>k", "<C-w>k", default_opts)
-nmap("<leader>l", "<C-w>l", default_opts)
+vim.keymap.set('n', "<leader>h", "<C-w>h")
+vim.keymap.set('n', "<leader>j", "<C-w>j")
+vim.keymap.set('n', "<leader>k", "<C-w>k")
+vim.keymap.set('n', "<leader>l", "<C-w>l")
 
 -- global clipboard
-nmap("<leader>cy", '"+y', default_opts)
-vmap("<leader>cy", '"+y', default_opts)
-nmap("<leader>cp", '"+p', default_opts)
-vmap("<leader>cp", '"+p', default_opts)
-nmap("<leader>cP", '"+P', {noremap = false, silent = false})
+vim.keymap.set({'v', 'n'}, "<leader>cy", '"+y')
+vim.keymap.set({'v', 'n'}, "<leader>cp", '"+p')
+vim.keymap.set('n', "<leader>cP", '"+P', { noremap = false, silent = false })
 
--- delete text without changing default target register value 
-xmap("<leader>p", '"_dP', default_opts)
-nmap("<leader>d", '"_d', default_opts)
-vmap("<leader>d", '"_d', default_opts)
+-- delete text without changing default target register value
+vim.keymap.set('x', "<leader>p", '"_dP')
+vim.keymap.set({'v', 'n'}, "<leader>d", '"_d')
 
--- center after moves
-nmap("n", "nzzzv", default_opts)
-nmap("N", "Nzzz", default_opts)
-nmap("<C-d>", "<C-d>zz", default_opts)
-nmap("<C-u>", "<C-u>zz", default_opts)
-nmap("<C-f>", "<C-f>zz", default_opts)
-nmap("<C-b>", "<C-b>zz", default_opts)
-nmap("<C-o>", "<C-o>zz", default_opts)
-nmap("<C-i>", "<C-i>zz", default_opts)
-nmap("*", "*zz", {noremap = false, silent = false})
-nmap("#", "#zz", {noremap = false, silent = false})
-nmap("[[", "[[zz", default_opts)
-nmap("]]", "]]zz", default_opts)
-nmap("[]", "[]zz", default_opts)
-nmap("][", "][zz", default_opts)
+-- jumps and scrolling
+vim.keymap.set('n', "n", "nzzzv")
+vim.keymap.set('n', "N", "Nzzz")
+vim.keymap.set('n', "<C-d>", "<C-d>zz")
+vim.keymap.set('n', "<C-u>", "<C-u>zz")
+vim.keymap.set('n', "<C-f>", "<C-f>zz")
+vim.keymap.set('n', "<C-b>", "<C-b>zz")
+vim.keymap.set('n', "<C-o>", "<C-o>zz")
+vim.keymap.set('n', "<C-i>", "<C-i>zz")
+vim.keymap.set('n', "*", "*zz", { noremap = false, silent = false })
+vim.keymap.set('n', "#", "#zz", { noremap = false, silent = false })
+vim.keymap.set('n', "[[", "[[zz")
+vim.keymap.set('n', "]]", "]]zz")
+vim.keymap.set('n', "[]", "[]zz")
+vim.keymap.set('n', "][", "][zz")
+vim.keymap.set('n', "<A-j>", "<C-y>")
+vim.keymap.set('n', "<A-k>", "<C-e>")
 
 -- location list is local to a buffer (e.g. search results in current file) as opposed to quick-fix which is cross buffer (e.g. project compilation errors)
 -- quick-fix list (:copen, :cclose/ccl, etc.) navigation
-vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<F4>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<S-F4>", "<cmd>cprev<CR>zz")
 -- location list (:lopen, :lclose/lcl, etc.) navigation
-vim.keymap.set("n", "<A-j>", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<A-k>", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<F3>", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<S-F3>", "<cmd>lprev<CR>zz")
 -- old quick-fix list navigation hooks
--- nmap("<F4>", '(&diff ? "]c" : ":cnext<CR>zz")', {expr=true, noremap = true, silent = true})
--- nmap("<S-F4>", '(&diff ? "[c" : ":cprev<CR>zz")', {expr=true, noremap = true, silent = true})
+--vim.keymap.set('n', "<F4>", '(&diff ? "]c" : ":cnext<CR>zz")', {expr=true, noremap = true, silent = true})
+--vim.keymap.set('n', "<S-F4>", '(&diff ? "[c" : ":cprev<CR>zz")', {expr=true, noremap = true, silent = true})
 
 -- folding
 --  * zo: open current fold
@@ -107,41 +67,92 @@ vim.keymap.set("n", "<A-k>", "<cmd>lprev<CR>zz")
 --  * zO: open all folds
 --  * zC: close all folds
 --  * zf: fold
-nmap("zO", "zR<ESC>", default_opts)
-nmap("zC", "zM<ESC>", default_opts)
+vim.keymap.set('n', "zO", "zR<ESC>")
+vim.keymap.set('n', "zC", "zM<ESC>")
 
 -- yank from cursor to the end of line
-nmap("Y", "y$", default_opts)
+vim.keymap.set('n', "Y", "y$")
 
 -- Cahnge 'o'/'O' to not enter insertion mode after adding line
-nmap("o", "o<esc>", default_opts)
-nmap("O", "O<esc>", default_opts)
-nmap("<A-O>", "O", default_opts)
-nmap("<A-o>", "o", default_opts)
-imap("<A-O>", "<C-o>O", default_opts)
-imap("<A-o>", "<C-o>o", default_opts)
+vim.keymap.set('n', "o", "o<esc>")
+vim.keymap.set('n', "O", "O<esc>")
+vim.keymap.set('n', "<A-O>", "O")
+vim.keymap.set('n', "<A-o>", "o")
+vim.keymap.set('i', "<A-O>", "<C-o>O")
+vim.keymap.set('i', "<A-o>", "<C-o>o")
 
 -- resize split windows using arrow keys by pressing:
-nmap("<c-up>", "<c-w>+", default_opts)
-nmap("<c-down>" , "<c-w>-", default_opts)
-nmap("<c-left>", "<c-w><", default_opts)
-nmap("<c-right>", "<c-w>>", default_opts)
+vim.keymap.set('n', "<c-up>", "<c-w>+")
+vim.keymap.set('n', "<c-down>", "<c-w>-")
+vim.keymap.set('n', "<c-left>", "<c-w><")
+vim.keymap.set('n', "<c-right>", "<c-w>>")
 
 -- make %% in command mode expand to the current file's path
-cmap("%%", "getcmdtype() == ':' ? expand('%:p:h').'/' : '%%'", {expr=true, noremap = true})
+vim.keymap.set('c', "%%", "getcmdtype() == ':' ? expand('%:p:h').'/' : '%%'", { expr = true, noremap = true })
 -- make ^^ in command mode expand to the file, sans extension
-cmap("^^", "getcmdtype() == ':' ? expand('%:p:r') : '^^'", {expr=true, noremap = true})
+vim.keymap.set('c', "^^", "getcmdtype() == ':' ? expand('%:p:r') : '^^'", { expr = true, noremap = true })
 
 -- navigate buffers
-nmap("<S-l>", ":bnext<CR>", default_opts)
-nmap("<S-h>", ":bprevious<CR>", default_opts)
+vim.keymap.set('n', "<S-l>", ":bnext<CR>")
+vim.keymap.set('n', "<S-h>", ":bprevious<CR>")
 
 -- stay in visual mode while indenting
-vmap("<", "<gv", default_opts)
-vmap(">", ">gv", default_opts)
+vim.keymap.set('v', "<", "<gv")
+vim.keymap.set('v', ">", ">gv")
 
 -- formatting
-nmap("==", ":Format<cr>", default_opts)
-vmap("=", "<esc>:FormatRange<cr>", default_opts)
-xmap("=", "<esc>:FormatRange<cr>", default_opts)
+vim.keymap.set('n', "==", ":Format<cr>")
+vim.keymap.set({'x','v'}, "=", "<esc>:FormatRange<cr>")
+
+-- buffer operations
+vim.keymap.set('n', "<leader>bd", "<cmd>bd!<CR>", {desc="[B]uffer [D]elete"})
+vim.keymap.set('n', "<leader>bc", "<cmd>BufDel!<CR>", {desc="[B]uffer [C]lose"})
+vim.keymap.set('n', "<leader>bw", "<cmd>w!<CR>", {desc="[B]uffer [W]rite"})
+vim.keymap.set('n', "<leader>bf", "<cmd>Telescope current_buffer_fuzzy_find<CR>", {desc="[B]uffer [F]uzzy find"})
+vim.keymap.set('n', "<leader>bk", "<cmd>%bd|e#|bd#<CR>", {desc="[B]uffer [K]ill all others"})
+
+-- file eplorer
+vim.keymap.set('n', "<leader>et", "<cmd>NvimTreeToggle<cr>", {desc="[E]xplorer [T]oggle"})
+vim.keymap.set('n', "<leader>ef", "<cmd>NvimTreeFocus<cr>", {desc="[E]xplorer [F]ocus"})
+
+-- Search
+vim.keymap.set('n', "<leader>sf", "<cmd>lua require('telescope.builtin').find_files()<cr>", {desc="[S]earch [F]ile"})
+vim.keymap.set('n', "<leader>sb", "<cmd>lua require('telescope.builtin').buffers()<cr>", {desc="[S]earch [B]uffer"})
+vim.keymap.set('n', "<leader>sr", "<cmd>Telescope oldfiles<cr>", {desc="[S]earch [R]ecently opened files"})
+vim.keymap.set('n', "<leader>sR", "<md>Telescope registers<cr>", {desc="[S]earch [R]egister"})
+vim.keymap.set('n', "<leader>sk", "<cmd>Telescope keymaps<cr>", {desc="[S]earch [K]ey remapping"})
+vim.keymap.set('n', "<leader>sc", "<cmd>Telescope commands<cr>", {desc="[S]earch [C]ommand"})
+vim.keymap.set('n', "<leader>sC", "<cmd>Telescope colorscheme<cr>", {desc="[S]earch [C]olor scheme"})
+vim.keymap.set('n', "<leader>sh", "<cmd>Telescope help_tags<cr>", {desc="[S]earch [H]elp tag"})
+vim.keymap.set('n', "<leader>sm", "<cmd>Telescope man_pages<cr>", {desc="[S]earch [M]an page"})
+
+-- Teminal
+--vim.keymap.set('n', "<leader>tp", "<cmd>lua _PYTHON_TOGGLE()<cr>", {desc="[T]erminal [P]ython"})
+vim.keymap.set('n', "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", {desc="[T]erminal [F]loat"})
+vim.keymap.set('n', "<leader>th", "<cmd>ToggleTerm size=10 direction=horizontal<cr>", {desc="[T]erminal [H]orizontal"})
+vim.keymap.set('n', "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", {desc="[T]erminal [V]ertical"})
+
+-- Packer
+vim.keymap.set('n', "<leader>pc", "<cmd>PackerCompile<cr>", {desc="[P]acker [C]ompile"})
+vim.keymap.set('n', "<leader>pi", "<cmd>PackerInstall<cr>", {desc="[P]acker [I]nstall"})
+vim.keymap.set('n', "<leader>ps", "<cmd>PackerSync<cr>", {desc="[P]acker [S]ync"})
+vim.keymap.set('n', "<leader>pS", "<cmd>PackerStatus<cr>", {desc="[P]acker [S]tatus"})
+vim.keymap.set('n', "<leader>pu", "<cmd>PackerUpdate<cr>", {desc="[P]acker [U]pdate"})
+
+-- LSP
+vim.keymap.set('n', "<leader>Li", "<cmd>LspInfo<cr>", {desc="[L]sp [I]nfo"})
+
+ -- Git
+vim.keymap.set('n', "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", {desc="[G]it next hunk"})
+vim.keymap.set('n', "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", {desc="[G]it previous hunk"})
+vim.keymap.set('n', "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", {desc="[G]it [P]review hunk"})
+vim.keymap.set('n', "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>",{desc="[G]it [R]eset hunk"})
+vim.keymap.set('n', "<leader>gl", "<cmd>lua require 'gitsigns'.blame_line()<cr>", {desc="[G]it blame [L]ine"})
+vim.keymap.set('n', "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>",{desc="[G]it [R]eset buffer"})
+vim.keymap.set('n', "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", {desc="[G]it [S]tage hunk"})
+vim.keymap.set('n', "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", {desc="[G]it [U]ndo stage hunk"})
+vim.keymap.set('n', "<leader>go", "<cmd>Telescope git_status<cr>", {desc="[G]it status"})
+vim.keymap.set('n', "<leader>gb", "<cmd>Telescope git_branches<cr>", {desc="[G]it [U]update"})
+vim.keymap.set('n', "<leader>gc", "<cmd>Telescope git_commits<cr>", {desc="[G]it [B]ranches"})
+vim.keymap.set('n', "<leader>gd", "<cmd>Gitsigns diffthis HEAD<cr>", {desc="[G]it [D]iff head"})
 

@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 configs.setup({
-    ensure_installed = "all", -- one of "all" or a list of languages
+    ensure_installed = {"c", "cpp", "cmake", "python", "bash", "c_sharp", "html", "json", "lua", "yaml"}, -- specify "all" to intall all supported languages 
     ignore_install = { "" }, -- List of parsers to ignore installing
     highlight = {
         enable = true, -- false will disable the whole extension
@@ -116,5 +116,9 @@ if not ctx_status_ok then
     return
 end
 
-ctx_configs.setup {}
+ctx_configs.setup {
+    enable = true,
+    max_lines = 1,
+    trim_scope = "inner",
+}
 

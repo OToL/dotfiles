@@ -102,11 +102,6 @@ return packer.startup(function(use)
     -- integrated terminal
     use "akinsho/toggleterm.nvim"
 
-    -- [to remove] helper for shortducts
-    use "folke/which-key.nvim"
-    -- auto close paired tokens
-    --use "windwp/nvim-autopairs"
-
     -- git
     use "lewis6991/gitsigns.nvim"
 
@@ -145,13 +140,24 @@ return packer.startup(function(use)
             { 'hrsh7th/cmp-nvim-lua' },
 
             -- Useful status updates for LSP
-            {'j-hui/fidget.nvim'},
+            'j-hui/fidget.nvim',
 
             -- Snippets
             { 'L3MON4D3/LuaSnip' },
             { 'rafamadriz/friendly-snippets' },
         }
     }
+
+    -- auto pair for various special characters e.g. (), {}, etc.
+    use {
+        "windwp/nvim-autopairs",
+        branch = "main", -- timely updates
+        -- branch = "v1.x", -- won't receive breaking changes
+        requires = { "nvim-tree/nvim-web-devicons", "nvim-lua/plenary.nvim" }, -- optional for icon support
+    }
+
+    -- standard ctrl-tab window/buffer cycling
+    use "ghillb/cybu.nvim"
 
     -- colorschemes
     use "folke/tokyonight.nvim"

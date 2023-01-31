@@ -104,6 +104,7 @@ lsp.configure('sumneko_lua', {
 lsp.set_preferences({
     suggest_lsp_servers = false,
     manage_nvim_cmp = true,
+    set_lsp_keymaps = false,
     sign_icons = {
         error = '✘',
         warn = '▲',
@@ -140,8 +141,7 @@ lsp.on_attach(function(client, bufnr)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>fl", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl',
-        "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k><C-o>', "<cmd>ClangdSwitchSourceHeader<CR>", opts)
     -- vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
     vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format{async=true}' ]])
