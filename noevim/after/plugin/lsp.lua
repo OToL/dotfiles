@@ -13,7 +13,7 @@ if not snip_status_ok then
     return
 end
 
-local lsp_status_ok, lsp = pcall(require, "lsp-zero")
+local lsp_status_ok, lsp = pcall(require, "lsp-zero") -- display overloads
 if not lsp_status_ok then
     return
 end
@@ -31,7 +31,7 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
     ["<C-k>"] = cmp.mapping.select_prev_item(),
     ["<C-j>"] = cmp.mapping.select_next_item(),
     -- scroll up/down completion preview
-    ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
+    ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs( -1), { "i", "c" }),
     ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
     -- display all possible completion without typing anything
     ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
@@ -43,7 +43,6 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
     -- Accept currently selected item. If none selected, `select` first item.
     -- Set `select` to `false` to only confirm explicitly selected items.
     ["<CR>"] = cmp.mapping.confirm { select = true },
-
     -- "Super Tab": When a snippet has been selected, TAB and S-TAB are used to cycle parameters
     ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
@@ -64,8 +63,8 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
     ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
             cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
+        elseif luasnip.jumpable( -1) then
+            luasnip.jump( -1)
         else
             fallback()
         end
@@ -78,26 +77,31 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 lsp.preset("recommended")
 
 lsp.ensure_installed({
-    'sumneko_lua',
+    'lua_ls',
     'rust_analyzer',
     'clangd',
 })
 
 -- Fix Undefined global 'vim'
-lsp.configure('sumneko_lua', {
+lsp.configure('lua_ls', {
     settings = {
         Lua = {
             diagnostics = {
-                -- do not issue errors when parsing nvim 'vim' global variable
-                globals = { "vim" },
-            },
-            workspace = {
-                library = {
-                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                    [vim.fn.stdpath("config") .. "/lua"] = true,
-                },
-            },
-        },
+                globals = { 'vim' }
+            }
+        }
+    }
+})
+
+lsp.configure('clangd', {
+    cmd =
+    {
+        "clangd",
+        "--header-insertion=never",
+        "--background-index",
+        "--cross-file-rename",
+        "--completion-style=detailed", -- do not collapse overloads in one entry
+        "--suggest-missing-includes"
     }
 })
 
@@ -114,8 +118,26 @@ lsp.set_preferences({
 })
 
 lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
+    mapping = cmp_mappings,
+    sources = {
+        { name = 'nvim_lsp_signature_help' }, -- display overloads
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' }
+    }
 })
+
+local function lsp_highlight_document(client)
+    if client.server_capabilities.documentHighlightProvider then
+        vim.api.nvim_exec([[
+            augroup lsp_document_highlight
+                autocmd! * <buffer>
+                autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+                autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+            augroup END
+            ]],
+        false)
+    end
+end
 
 lsp.on_attach(function(client, bufnr)
     local opts = { noremap = true, silent = true }
@@ -125,28 +147,31 @@ lsp.on_attach(function(client, bufnr)
         return
     end
 
+    lsp_highlight_document(client)
+
     vim.api.nvim_buf_set_keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gvd", "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "Gd","<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "gl", '<cmd>lua vim.diagnostic.open_float({ border = "rounded" })<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-h>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>bs", "<cmd>lua require('telescope.builtin').lsp_document_symbols({symbols={'class', 'struct', 'function'}})<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ss", "<cmd>lua require('telescope.builtin').lsp_workspace_symbols({symbols={'class', 'struct', 'function'}})<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "rounded" })<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "rounded" })<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>fl", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
+    --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
+    --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
+    --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k><C-o>', "<cmd>ClangdSwitchSourceHeader<CR>", opts)
     -- vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
     vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format{async=true}' ]])
     vim.cmd([[ command! FormatRange execute 'lua vim.lsp.buf.range_formatting()' ]])
-
 end)
 
 lsp.setup()

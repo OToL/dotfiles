@@ -102,6 +102,9 @@ return packer.startup(function(use)
     -- integrated terminal
     use "akinsho/toggleterm.nvim"
 
+    -- auto pair for various special characters e.g. (), {}, etc.
+    use "windwp/nvim-autopairs"
+
     -- git
     use "lewis6991/gitsigns.nvim"
 
@@ -123,6 +126,9 @@ return packer.startup(function(use)
         after = 'nvim-treesitter',
     }
 
+    -- workspace management
+    use "natecraddock/workspaces.nvim"
+
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
@@ -138,6 +144,7 @@ return packer.startup(function(use)
             { 'saadparwaiz1/cmp_luasnip' },
             { 'hrsh7th/cmp-nvim-lsp' },
             { 'hrsh7th/cmp-nvim-lua' },
+            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
 
             -- Useful status updates for LSP
             'j-hui/fidget.nvim',
@@ -147,17 +154,6 @@ return packer.startup(function(use)
             { 'rafamadriz/friendly-snippets' },
         }
     }
-
-    -- auto pair for various special characters e.g. (), {}, etc.
-    use {
-        "windwp/nvim-autopairs",
-        branch = "main", -- timely updates
-        -- branch = "v1.x", -- won't receive breaking changes
-        requires = { "nvim-tree/nvim-web-devicons", "nvim-lua/plenary.nvim" }, -- optional for icon support
-    }
-
-    -- standard ctrl-tab window/buffer cycling
-    use "ghillb/cybu.nvim"
 
     -- colorschemes
     use "folke/tokyonight.nvim"

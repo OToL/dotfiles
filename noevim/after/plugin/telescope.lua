@@ -58,7 +58,8 @@ telescope.setup {
 }
 
 -- Enable telescope fzf native, if installed
-pcall(telescope.load_extension, 'fzf')
+pcall(telescope.load_extension, "fzf")
+pcall(telescope.load_extension, "workspaces")
 
 -- my telescopic customizations
 local M = {}
