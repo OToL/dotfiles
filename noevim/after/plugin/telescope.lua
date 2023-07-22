@@ -1,5 +1,10 @@
-local status_ok, telescope = pcall(require, "telescope")
-if not status_ok then
+local status_telescope_ok, telescope = pcall(require, "telescope")
+if not status_telescope_ok then
+    return
+end
+
+local status_lga_ok, lga_actions = pcall(require, "telescope-live-grep-args.actions")
+if not status_lga_ok then
     return
 end
 
@@ -55,7 +60,22 @@ telescope.setup {
             },
         },
     },
-}
+    extensions = {
+        live_grep_args = {
+          auto_quoting = true, -- enable/disable auto-quoting
+          -- define mappings, e.g.
+          mappings = { -- extend mappings
+            i = {
+              ["<A-k>"] = lga_actions.quote_prompt(),
+              ["<A-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+            },
+          },
+          -- ... also accepts theme settings, for example:
+          -- theme = "dropdown", -- use dropdown theme
+          -- theme = { }, -- use own theme spec
+          -- layout_config = { mirror=true }, -- mirror preview pane
+        }
+  }}
 
 -- Enable telescope fzf native, if installed
 pcall(telescope.load_extension, "fzf")

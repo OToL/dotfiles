@@ -71,6 +71,7 @@ return packer.startup(function(use)
         'nvim-telescope/telescope-fzf-native.nvim',
         run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
     }
+    use "nvim-telescope/telescope-live-grep-args.nvim"
 
     -- fency status line
     use "nvim-lualine/lualine.nvim"
@@ -155,9 +156,20 @@ return packer.startup(function(use)
         }
     }
 
+    use({
+        'ray-x/navigator.lua',
+        requires = {
+            { 'ray-x/guihua.lua',     run = 'cd lua/fzy && make' },
+            { 'ray-x/lsp_signature.nvim' },
+            { 'neovim/nvim-lspconfig' },
+        },
+    })
+
     -- colorschemes
-    use "folke/tokyonight.nvim"
+    use 'folke/tokyonight.nvim'
     use 'navarasu/onedark.nvim'
+    use 'ray-x/aurora'
+    use 'ray-x/starry.nvim'
 
     -- automatically set up your configuration after cloning packer.nvim
     -- must be placed after all plugins

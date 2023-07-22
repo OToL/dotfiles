@@ -35,6 +35,7 @@ vim.keymap.set('n', "<c-up>", "<c-w>+")
 vim.keymap.set('n', "<c-down>", "<c-w>-")
 vim.keymap.set('n', "<c-left>", "<c-w><")
 vim.keymap.set('n', "<c-right>", "<c-w>>")
+vim.keymap.set('n', "<c-Bslash>", "<cmd>vsplit<CR>", {desc="Split current window vertically and keep buffer"})
 
 -- global clipboard
 vim.keymap.set({'v', 'n'}, "<leader>cy", '"+y')
@@ -60,8 +61,8 @@ vim.keymap.set('n', "[[", "[[zz")
 vim.keymap.set('n', "]]", "]]zz")
 vim.keymap.set('n', "[]", "[]zz")
 vim.keymap.set('n', "][", "][zz")
-vim.keymap.set('n', "<A-j>", "<C-y>")
-vim.keymap.set('n', "<A-k>", "<C-e>")
+vim.keymap.set('n', "<M-j>", "<C-y>")
+vim.keymap.set('n', "<M-k>", "<C-e>")
 
 -- location list is local to a buffer (e.g. search results in current file) as opposed to quick-fix which is cross buffer (e.g. project compilation errors)
 -- quick-fix list (:copen, :cclose/ccl, etc.) navigation
@@ -132,6 +133,11 @@ vim.keymap.set('n', "<leader>sc", "<cmd>Telescope commands<cr>", {desc="[S]earch
 vim.keymap.set('n', "<leader>sC", "<cmd>Telescope colorscheme<cr>", {desc="[S]earch [C]olor scheme"})
 vim.keymap.set('n', "<leader>sh", "<cmd>Telescope help_tags<cr>", {desc="[S]earch [H]elp tag"})
 vim.keymap.set('n', "<leader>sm", "<cmd>Telescope man_pages<cr>", {desc="[S]earch [M]an page"})
+
+-- Live Grep
+vim.keymap.set("n", "<leader>lgg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", {desc="[L]ive [G]rep [G]lobal"})
+vim.keymap.set("n", "<leader>lgc", require("telescope-live-grep-args.shortcuts").grep_word_under_cursor, {desc="[L]ive [G]rep [C]ursor"})
+vim.keymap.set("v", "<leader>lgv", require("telescope-live-grep-args.shortcuts").grep_visual_selection, {desc="[L]ive [G]rep [V]isual"})
 
 -- Teminal
 --vim.keymap.set('n', "<leader>tp", "<cmd>lua _PYTHON_TOGGLE()<cr>", {desc="[T]erminal [P]ython"})

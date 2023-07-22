@@ -9,12 +9,14 @@
 --    --colors.error = "#ff0000"
 --  end
 --})
+
 require('onedark').setup {
     style = 'darker',
     highlights = {
-        ["@comment"] = {fg = "#ABABAB"},
+        ["@comment"] = { fg = "#ABABAB" },
     }
 }
 
 require('onedark').load()
 
+--vim.cmd[[colorscheme dracula]]
