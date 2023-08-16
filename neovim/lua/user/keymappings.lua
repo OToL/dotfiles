@@ -37,6 +37,12 @@ vim.keymap.set('n', "<c-left>", "<c-w><")
 vim.keymap.set('n', "<c-right>", "<c-w>>")
 vim.keymap.set('n', "<c-Bslash>", "<cmd>vsplit<CR>", {desc="Split current window vertically and keep buffer"})
 
+-- insert mode cursor move
+vim.keymap.set('i', "<C-h>", "<Left>")
+vim.keymap.set('i', "<C-j>", "<Down>")
+vim.keymap.set('i', "<C-k>", "<Up>")
+vim.keymap.set('i', "<C-l>", "<Right>")
+
 -- global clipboard
 vim.keymap.set({'v', 'n'}, "<leader>cy", '"+y')
 vim.keymap.set({'v', 'n'}, "<leader>cp", '"+p')
