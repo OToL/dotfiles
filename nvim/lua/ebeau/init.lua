@@ -1,0 +1,27 @@
+require("ebeau.core.utils")
+require("ebeau.core.options")
+require("ebeau.core.keymappings")
+require("ebeau.core.commands")
+require("ebeau.core.autocommands")
+require("ebeau.core.colorscheme")
+
+require("ebeau.plugins-setup")
+
+require("ebeau.plugins.alpha")
+require("ebeau.plugins.autopairs")
+require("ebeau.plugins.bufdel")
+require("ebeau.plugins.bufferline")
+require("ebeau.plugins.comment")
+require("ebeau.plugins.exrc") -- it may be built-in now
+require("ebeau.plugins.gitsigns") -- to review once using git plugin
+require("ebeau.plugins.impatient")
+require("ebeau.plugins.indent")
+require("ebeau.plugins.lualine")
+require("ebeau.plugins.surround")
+require("ebeau.plugins.nvim-tree")
+require("ebeau.plugins.toggleterm")
+require("ebeau.plugins.workspaces")
+require("ebeau.plugins.treesitter")
+require("ebeau.plugins.telescope")
+require("ebeau.plugins.lsp-saga")
+require("ebeau.plugins.lsp")

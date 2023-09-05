@@ -29,16 +29,13 @@ dashboard.section.header.val = {
 "                               `             '"
 }
 
-
-
 dashboard.section.buttons.val = {
---	dashboard.button("t", "  Find text", ":Telescope live_grep <CR>"),
 	dashboard.button("w", "  Find workspace", ":Telescope workspaces <CR>"),
-	dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
+	dashboard.button("f", "🔍 Find file", ":Telescope find_files <CR>"),
 	dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
-	dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
+	dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
 	dashboard.button("c", "  Configuration", ":e ~/appdata/Local/nvim/init.lua <CR>"),
-	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
 }
 
 local function footer()
@@ -57,6 +54,5 @@ dashboard.section.header.opts.hl = "Include"
 dashboard.section.buttons.opts.hl = "Keyword"
 
 dashboard.opts.opts.noautocmd = true
--- vim.cmd([[autocmd User AlphaReady echo 'ready']])
 
 alpha.setup(dashboard.opts)

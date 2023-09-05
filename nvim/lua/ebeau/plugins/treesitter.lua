@@ -4,11 +4,13 @@ if not status_ok then
 end
 
 configs.setup({
-    ensure_installed = {"c", "cpp", "cmake", "python", "bash", "c_sharp", "html", "json", "lua", "yaml"}, -- specify "all" to intall all supported languages 
-    ignore_install = { "" }, -- List of parsers to ignore installing
+    -- specify "all" to intall all supported languages
+    ensure_installed = { "c", "cpp", "cmake", "markdown", "markdown_inline", "python", "bash", "c_sharp", "html", "json",
+        "lua", "yaml" },
+    ignore_install = { "" },
     highlight = {
-        enable = true, -- false will disable the whole extension
-        disable = { "css" }, -- list of language that will be disabled
+        enable = true,
+        disable = { "css" },
     },
     autopairs = {
         enable = true,
@@ -17,10 +19,10 @@ configs.setup({
     incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = '<c-space>',
-          node_incremental = '<c-space>',
-          scope_incremental = '<c-s>',
-          node_decremental = '<c-backspace>',
+            init_selection = '<c-space>',
+            node_incremental = '<c-space>',
+            scope_incremental = '<c-s>',
+            node_decremental = '<c-backspace>',
         },
     },
     textobjects = {
@@ -32,41 +34,54 @@ configs.setup({
 
             keymaps = {
                 -- You can use the capture groups defined in textobjects.scm
+                -- =: assignment
+                ["a="] = { query = "@assignment.outer", desc = "Select outer part of an assignment region" },
+                ["i="] = { query = "@assignment.inner", desc = "Select inner part of an assignment region" },
+
+                -- i: conditional
+                ["ai"] = { query = "@conditional.outer", desc = "Select outer part of a conditional region" },
+                ["ii"] = { query = "@conditional.inner", desc = "Select inner part of a conditional region" },
+
+                -- l: loop
+                ["al"] = { query = "@loop.outer", desc = "Select outer part of a loop region" },
+                ["il"] = { query = "@loop.inner", desc = "Select inner part of a loop region" },
+
                 -- b: block
                 ["ab"] = "@block.outer",
                 ["ib"] = "@block.inner",
+
                 -- a: argument
                 ["aa"] = "@parameter.outer",
                 ["ia"] = "@parameter.inner",
+
                 -- f: function
                 ["af"] = "@function.outer",
                 ["if"] = "@function.inner",
+
                 -- c: class
                 ["ac"] = "@class.outer",
-                -- You can optionally set descriptions to the mappings (used in the desc parameter of
-                -- nvim_buf_set_keymap) which plugins like which-key display
                 ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
             },
             move = {
-                  enable = true,
-                  set_jumps = true, -- whether to set jumps in the jumplist
-                  goto_next_start = {
+                enable = true,
+                set_jumps = true, -- whether to set jumps in the jumplist
+                goto_next_start = {
                     [']m'] = '@function.outer',
                     [']]'] = '@class.outer',
-                  },
-                  goto_next_end = {
+                },
+                goto_next_end = {
                     [']M'] = '@function.outer',
                     [']['] = '@class.outer',
-                  },
-                  goto_previous_start = {
+                },
+                goto_previous_start = {
                     ['[m'] = '@function.outer',
                     ['[['] = '@class.outer',
-                  },
-                  goto_previous_end = {
+                },
+                goto_previous_end = {
                     ['[M'] = '@function.outer',
                     ['[]'] = '@class.outer',
-                  },
                 },
+            },
             -- You can choose the select mode (default is charwise 'v')
             --
             -- Can also be a function which gets passed a table with the keys
@@ -76,7 +91,7 @@ configs.setup({
             -- mapping query_strings to modes.
             selection_modes = {
                 ['@parameter.outer'] = 'v', -- charwise
-                ['@function.outer'] = 'V', -- linewise
+                ['@function.outer'] = 'V',  -- linewise
                 ['@class.outer'] = '<c-v>', -- blockwise
             },
             -- If you set this to `true` (default is `false`) then any textobject is
@@ -99,17 +114,8 @@ configs.setup({
                 ["<leader>A"] = "@parameter.inner",
             },
         },
-        -- lsp_interop = {
-        --     enable = true,
-        --     border = 'none',
-        --     peek_definition_code = {
-        --         ["<leader>df"] = "@function.outer",
-        --         ["<leader>dF"] = "@class.outer",
-        --     },
-        -- },
     },
 })
-
 
 local ctx_status_ok, ctx_configs = pcall(require, "treesitter-context")
 if not ctx_status_ok then
@@ -121,4 +127,3 @@ ctx_configs.setup {
     max_lines = 1,
     trim_scope = "inner",
 }
-

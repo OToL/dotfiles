@@ -20,11 +20,13 @@ telescope.setup {
             ".build", ".git", ".backup", ".swap", ".langservers", ".session", ".undo",
             ".cache", ".vscode-server", "%.pdb", "%.cab", "%.exe", "%.csv",
             "%.dll", "%.EXE", "%.bl", "%.a", "%.so", "%.lib", "%.msi",
-            ".vs", "%.mst", "%.zip", "%.7z", "%.doc", "%.docx"
+            ".vs", "%.mst", "%.zip", "%.7z", "%.doc", "%.docx", "%.obj", "%.lib"
         },
 
         mappings = {
             i = {
+                ["<M-w>"] = actions.close,
+
                 ["<C-j>"] = actions.move_selection_next,
                 ["<C-k>"] = actions.move_selection_previous,
                 ["<Down>"] = actions.move_selection_next,
@@ -40,7 +42,7 @@ telescope.setup {
             },
 
             n = {
-                ["<esc>"] = actions.close,
+                ["<M-w>"] = actions.close,
 
                 ["<C-h>"] = actions.select_horizontal,
                 ["<C-v>"] = actions.select_vertical,

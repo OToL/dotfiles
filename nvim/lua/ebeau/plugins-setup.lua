@@ -73,8 +73,14 @@ return packer.startup(function(use)
     }
     use "nvim-telescope/telescope-live-grep-args.nvim"
 
+    -- telescope UI skinning
+    use "stevearc/dressing.nvim"
+
     -- fency status line
     use "nvim-lualine/lualine.nvim"
+
+    -- maximizes and restores current window
+    use "szw/vim-maximizer"
 
     -- BufDel command
     use "ojroques/nvim-bufdel"
@@ -138,6 +144,9 @@ return packer.startup(function(use)
             { 'williamboman/mason.nvim' },
             { 'williamboman/mason-lspconfig.nvim' },
 
+            -- LSP UI
+            {"glepnir/lspsaga.nvim",},
+
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
             { 'hrsh7th/cmp-buffer' },
@@ -146,9 +155,10 @@ return packer.startup(function(use)
             { 'hrsh7th/cmp-nvim-lsp' },
             { 'hrsh7th/cmp-nvim-lua' },
             { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+            { 'onsails/lspkind.nvim' }, -- vs-code like pictograms
 
             -- Useful status updates for LSP
-            'j-hui/fidget.nvim',
+            { 'j-hui/fidget.nvim', tag = 'legacy' },
 
             -- Snippets
             { 'L3MON4D3/LuaSnip' },
@@ -156,20 +166,12 @@ return packer.startup(function(use)
         }
     }
 
-    use({
-        'ray-x/navigator.lua',
-        requires = {
-            { 'ray-x/guihua.lua',     run = 'cd lua/fzy && make' },
-            { 'ray-x/lsp_signature.nvim' },
-            { 'neovim/nvim-lspconfig' },
-        },
-    })
-
     -- colorschemes
     use 'folke/tokyonight.nvim'
     use 'navarasu/onedark.nvim'
     use 'ray-x/aurora'
     use 'ray-x/starry.nvim'
+    use 'bluz71/vim-nightfly-colors'
 
     -- automatically set up your configuration after cloning packer.nvim
     -- must be placed after all plugins
