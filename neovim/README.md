@@ -1,7 +1,7 @@
 # SETUP
 
 - Install Git: https://git-scm.com/
-- Install neovim: https://neovim.io/ or package manager (e.g. brew on MacOS)
+- Install neovim: download binaries (https://github.com/neovim/neovim/releases) or package manager (e.g. brew on MacOS)
 - Install Nerd Fonts
     - https://github.com/ryanoasis/nerd-fonts
     - https://www.geekbits.io/how-to-setup-nerd-fonts-in-windows/
@@ -13,4 +13,4 @@
 # TODO
 
 - Setup C++ dev environment ...
-    - sss
+    - 
