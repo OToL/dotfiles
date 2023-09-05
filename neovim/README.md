@@ -9,3 +9,8 @@
     - Windows: ~/AppData/Local/nvim
     - MacOS: ~.config/nvim
 - Launch neovim at least twice in a raw because some plugins are compiling/downloading utilities (e.g. treesitter, lsp, etc.) the first time it is executed
+
+# TODO
+
+- Setup C++ dev environment ...
+    - sss
