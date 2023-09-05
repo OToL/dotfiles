@@ -1,7 +1,7 @@
 # SETUP
 
 - Install Git: https://git-scm.com/
-- Install neovim: download binaries (https://github.com/neovim/neovim/releases) or package manager (e.g. brew on MacOS)
+- Install neovim: download binaries (https://github.com/neovim/neovim/releases) or use OS package manager (e.g. brew on MacOS)
 - Install Nerd Fonts
     - https://github.com/ryanoasis/nerd-fonts
     - https://www.geekbits.io/how-to-setup-nerd-fonts-in-windows/
@@ -13,4 +13,22 @@
 # TODO
 
 - Setup C++ dev environment ...
-    - 
+    - Use built-in exrc feature (https://neovim.io/doc/user/options.html#'exrc') instead of a Plugin
+    - CMake preset file
+    - Async "Build" (configure?) command
+    - Shortcut to launch ... how to launch in separate terminal?
+    - Setup Vscode to debug the same project
+    - Investigate how to use latest clang
+- Rename neovim to nvim in github
+- Clean-up list of installed plugin + rename plugins-setup.lua to plugins-install.lua
+- Use init.lua in sub-directories (core & plugins)
+- Try harpoon
+- Try NvChad/nvim-colorizer
+- Check available NvChad plugins
+- Learn about tags
+- Learn about registers e.g. consider using vim-ReplaceWithRegister
+- Learn about quick and location list
+- Learn efficient git workflow/plugins
+- Move to lazy vim
+- Try using tmux
+- Consider getting rid of lsp-zero
