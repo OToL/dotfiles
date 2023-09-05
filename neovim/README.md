@@ -1,3 +1,5 @@
+# INSTALL
+
 - Install Git: https://git-scm.com/
 - Install neovim: https://neovim.io/
 - Windows: Install Nerd Fonts
