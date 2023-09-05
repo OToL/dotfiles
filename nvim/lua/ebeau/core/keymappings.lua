@@ -51,6 +51,12 @@ vim.keymap.set('i', "<C-j>", "<Down>")
 vim.keymap.set('i', "<C-k>", "<Up>")
 vim.keymap.set('i', "<C-l>", "<Right>")
 
+-- insert mode cursor move
+vim.keymap.set('i', "<C-h>", "<Left>")
+vim.keymap.set('i', "<C-j>", "<Down>")
+vim.keymap.set('i', "<C-k>", "<Up>")
+vim.keymap.set('i', "<C-l>", "<Right>")
+
 -- global clipboard
 vim.keymap.set({'v', 'n'}, "<leader>cy", '"+y')
 vim.keymap.set({'v', 'n'}, "<leader>cp", '"+p')
