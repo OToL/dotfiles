@@ -9,7 +9,7 @@ vim.opt.smartcase = true                -- search is case sensitive only when us
 vim.opt.showmatch = true                -- shows all matches of the current search
 
 vim.opt.number = true                   -- show line numbers in the margin
-vim.opt.numberwidth = 2                 -- set number column width {default 4}
+vim.opt.numberwidth = 1                 -- set number column width {default 4}
 vim.opt.relativenumber = true           -- show relative line numbers in the margin
 
 vim.opt.scrolloff = 4                   -- scrolls the text so that there are always at least N lines visible above and below the cursor
@@ -28,7 +28,6 @@ vim.opt.expandtab = true                -- convert tabs to spaces
 vim.opt.tabstop = 4                     -- insert 4 spaces for a tab
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4                  -- number of spaces inserted for each indentation
-vim.opt.autoindent = true               -- copy indent from current line when starting a new line 
 vim.opt.smartindent = true              -- indenting behavior depends on the language/context
 
 vim.opt.updatetime = 250                -- faster completion (4000ms default)
@@ -49,3 +48,13 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 vim.cmd "set whichwrap+=h,l"            -- Allow specified keys that move the cursor left/right to move to the previous/next line when the cursor is on the first/last character in the line.
 vim.cmd "set exrc"                      -- Allow automatic executation of vim script located at workspace root
+
+-- Settings required by nvim-ufo
+vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+
+-- Same list as vim-dispatch but without 'tmux'
+-- I have removed it because it is causing all panes to show up when invoking :Make
+vim.cmd "let g:dispatch_handlers = ['job', 'screen', 'terminal', 'windows', 'iterm', 'x11', 'headless']"

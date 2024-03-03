@@ -1,15 +1,18 @@
-local status_ok, _ = pcall(require, "exrc")
-if not status_ok then
-  return
-end
-
-vim.o.exrc = false
-
-require("exrc").setup({
-  files = {
-    ".nvimrc.lua",
-    ".nvimrc",
-    ".exrc.lua",
-    ".exrc",
-  },
-})
+return {
+    "MunifTanjim/exrc.nvim",
+    dependencies = {
+        "MunifTanjim/exrc.nvim"
+    },
+    config = function()
+        vim.o.exrc = false
+        require("exrc").setup({
+          files = {
+            ".nvim.lua",
+            ".nvimrc.lua",
+            ".nvimrc",
+            ".exrc.lua",
+            ".exrc",
+          },
+        })
+    end,
+}

@@ -8,12 +8,11 @@ vim.g.maplocalleader = " "
 vim.g.mapleader = " "
 
 -- lua config file helpers (C --> Config)
-vim.keymap.set('n', "<leader>lI", "<cmd>e " .. utils.joinPaths(vim_config_path, "init.lua") .. "<CR>", {desc="Open [i]nit.lua root [C]onfig"})
-vim.keymap.set('n', "<leader>li", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "init.lua") .. "<CR>", {desc="Open plugins [I]nit.lua [C]onfig"})
-vim.keymap.set('n', "<leader>lp", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "plugins-setup.lua") .. "<CR>", {desc="Open [p]lugins.lua [C]onfig"})
-vim.keymap.set('n', "<leader>lk", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "core", "keymappings.lua") .. "<CR>", {desc="Open [k]eymappings.lua [C]onfig"})
-vim.keymap.set('n', "<leader>lo", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "core", "options.lua") .. "<CR>", {desc="Open [o]options.lua [C]onfig"})
-vim.keymap.set('n', "<leader>ll", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "plugins", "lsp.lua") .. "<CR>", {desc="Open [l]sp.lua [C]onfig"})
+vim.keymap.set('n', "<leader>li", "<cmd>e " .. utils.joinPaths(vim_config_path, "init.lua") .. "<CR>", {desc="[L]oad [i]nit.lua root"})
+vim.keymap.set('n', "<leader>lk", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "core", "keymappings.lua") .. "<CR>", {desc="[L]oad [k]eymappings.lua"})
+vim.keymap.set('n', "<leader>lo", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "core", "options.lua") .. "<CR>", {desc="[L]oad [o]options.lua"})
+vim.keymap.set('n', "<leader>lp", "<cmd>e " .. utils.joinPaths(vim_config_path, "lua", "ebeau", "plugins_index.lua") .. "<CR>", {desc="[L]oad [p]lugins_index.lua"})
+vim.keymap.set('n', "<leader>lt", "<cmd>e ~/.tmux.conf<CR>", {desc="[L]oad [t]mux config"})
 
 -- more practical insert mode exit
 vim.keymap.set('i', "jk", "<ESC>")
@@ -32,10 +31,10 @@ vim.keymap.set('n', "<C-h>", "<C-w>h")
 vim.keymap.set('n', "<C-j>", "<C-w>j")
 vim.keymap.set('n', "<C-k>", "<C-w>k")
 vim.keymap.set('n', "<C-l>", "<C-w>l")
-vim.keymap.set('n', "<C-up>", "10<c-w>+")
-vim.keymap.set('n', "<C-down>", "10<c-w>-")
-vim.keymap.set('n', "<C-left>", "10<c-w><")
-vim.keymap.set('n', "<C-right>", "10<c-w>>")
+vim.keymap.set('n', "<C-up>", "3<c-w>+")
+vim.keymap.set('n', "<C-down>", "3<c-w>-")
+vim.keymap.set('n', "<C-left>", "3<c-w><")
+vim.keymap.set('n', "<C-right>", "3<c-w>>")
 vim.keymap.set('n', "<C-Bslash>", "<cmd>vsplit<CR>", {desc="Split current window vertically and keep buffer"})
 vim.keymap.set('n', "<C-|>", "<cmd>split<CR>", {desc="Split current window horizontally and keep buffer"})
 vim.keymap.set("n", "<leader>sv", "<C-w>v", {desc="[S]plit [V]ertically"})
@@ -43,13 +42,6 @@ vim.keymap.set("n", "<leader>sh", "<C-w>s", {desc="[S]plit [H]orizontally"})
 vim.keymap.set("n", "<leader>s=", "<C-w>=", {desc="[S]plit Equally"})
 vim.keymap.set("n", "<leader>sx", ":close<CR>", {desc="[S]plit kill"})
 vim.keymap.set("n", "<M-w>", ":close<CR>", {desc="[S]plit kill"})
-vim.keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>")
-
--- insert mode cursor move
-vim.keymap.set('i', "<C-h>", "<Left>")
-vim.keymap.set('i', "<C-j>", "<Down>")
-vim.keymap.set('i', "<C-k>", "<Up>")
-vim.keymap.set('i', "<C-l>", "<Right>")
 
 -- insert mode cursor move
 vim.keymap.set('i', "<C-h>", "<Left>")
@@ -65,7 +57,7 @@ vim.keymap.set('n', "<leader>cP", '"+P', { noremap = false, silent = false })
 -- delete text without filling default register
 vim.keymap.set('n', "x", '"_x')
 vim.keymap.set('x', "<leader>p", '"_dP')
-vim.keymap.set({'v', 'n'}, "<leader>d", '"_d')
+vim.keymap.set({'v', 'n'}, "<leader>D", '"_d')
 
 -- increment/decrement
 vim.keymap.set('n', '<leader>+', '<C-a>')
@@ -88,6 +80,9 @@ vim.keymap.set('n', "[]", "[]zz")
 vim.keymap.set('n', "][", "][zz")
 vim.keymap.set('n', "<M-j>", "5<C-y>")
 vim.keymap.set('n', "<M-k>", "5<C-e>")
+vim.keymap.set('n', "<space>mh", ":execute 'normal! H'<cr>")
+vim.keymap.set('n', "<space>mm", ":execute 'normal! M'<cr>")
+vim.keymap.set('n', "<space>ml", ":execute 'normal! L'<cr>")
 
 -- location list is local to a buffer (e.g. search results in current file) as opposed to quick-fix which is cross buffer (e.g. project compilation errors)
 -- quick-fix list (:copen, :cclose/ccl, etc.) navigation
@@ -98,13 +93,19 @@ vim.keymap.set("n", "<F3>", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<S-F3>", "<cmd>lprev<CR>zz")
 
 -- folding
---  * zo: open current fold
---  * zc: close current fold
---  * zO: open all folds
+--  * zo: Open fold under cursor
+--  * zc: Close fold under cursor
+--  * zf: fold object
+--  * za: Toggle fold in current scope/block  
+--  * zk: Preview fold under cursor
+--  * zA: Toggle fold and sub-folds in current scope/block  
+--  * zO: Open all folds
 --  * zC: close all folds
---  * zf: fold
-vim.keymap.set('n', "zO", "zR<ESC>")
-vim.keymap.set('n', "zC", "zM<ESC>")
+-- vim.keymap.set('n', "zO", "zR<ESC>")
+-- vim.keymap.set('n', "zC", "zM<ESC>")
+vim.keymap.set('n', 'zO', "<cmd>lua require('ufo').openAllFolds()<CR>")
+vim.keymap.set('n', 'zC', "<cmd>lua require('ufo').closeAllFolds()<CR>")
+vim.keymap.set('n', 'zk', "<cmd>lua require('ufo').peekFoldedLinesUnderCursor()<CR>")
 
 -- yank from cursor to the end of line
 vim.keymap.set('n', "Y", "y$")
@@ -123,8 +124,8 @@ vim.keymap.set('c', "%%", "getcmdtype() == ':' ? expand('%:p:h').'/' : '%%'", { 
 vim.keymap.set('c', "^^", "getcmdtype() == ':' ? expand('%:p:r') : '^^'", { expr = true, noremap = true })
 
 -- navigate buffers
-vim.keymap.set('n', "<S-l>", ":bnext<CR>")
-vim.keymap.set('n', "<S-h>", ":bprevious<CR>")
+vim.keymap.set('n', "<M-l>", ":bnext<CR>")
+vim.keymap.set('n', "<M-h>", ":bprevious<CR>")
 
 -- stay in visual mode while indenting
 vim.keymap.set('v', "<", "<gv")
@@ -134,6 +135,11 @@ vim.keymap.set('v', ">", ">gv")
 vim.keymap.set("n", "==", vim.lsp.buf.format, { noremap = true, silent = true })
 vim.keymap.set({'x','v'}, "=", vim.lsp.buf.format, { noremap = true, silent = true })
 
+-- file eplorer
+vim.keymap.set('n', "<leader>et", "<cmd>NvimTreeToggle<cr>", {desc="[E]xplorer [T]oggle"})
+vim.keymap.set('n', "<leader>ef", "<cmd>NvimTreeFocus<cr>", {desc="[E]xplorer [F]ocus"})
+vim.keymap.set('n', "<leader>fb", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<CR>", {desc="[F]ile [B]rowser"})
+
 -- buffer operations
 vim.keymap.set('n', "<leader>bd", "<cmd>bd!<CR>", { desc = "[B]uffer [D]elete" })
 vim.keymap.set('n', "<leader>bc", "<cmd>BufDel!<CR>", { desc = "[B]uffer [C]lose" })
@@ -141,35 +147,61 @@ vim.keymap.set('n', "<leader>bw", "<cmd>w!<CR>", { desc = "[B]uffer [W]rite" })
 vim.keymap.set('n', "<leader>bf", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "[B]uffer [F]uzzy find" })
 vim.keymap.set('n', "<leader>bk", "<cmd>%bd|e#|bd#<CR>", { desc = "[B]uffer [K]ill all others" })
 
--- file eplorer
-vim.keymap.set('n', "<leader>et", "<cmd>NvimTreeToggle<cr>", {desc="[E]xplorer [T]oggle"})
-vim.keymap.set('n', "<leader>ef", "<cmd>NvimTreeFocus<cr>", {desc="[E]xplorer [F]ocus"})
-
 -- Search
 vim.keymap.set('n', "<leader>sf", "<cmd>lua require('telescope.builtin').find_files()<cr>", {desc="[S]earch [F]ile"})
 vim.keymap.set('n', "<leader>sb", "<cmd>lua require('telescope.builtin').buffers()<cr>", {desc="[S]earch [B]uffer"})
-vim.keymap.set('n', "<leader>sr", "<cmd>Telescope oldfiles<cr>", {desc="[S]earch [R]ecently opened files"})
-vim.keymap.set('n', "<leader>sR", "<md>Telescope registers<cr>", {desc="[S]earch [R]egister"})
+vim.keymap.set('n', "<leader>so", "<cmd>Telescope oldfiles<cr>", {desc="[S]earch [o]ld files"})
+vim.keymap.set('n', "<leader>sr", "<cmd>Telescope registers<cr>", {desc="[S]earch [R]egister"})
 vim.keymap.set('n', "<leader>sk", "<cmd>Telescope keymaps<cr>", {desc="[S]earch [K]ey remapping"})
 vim.keymap.set('n', "<leader>sc", "<cmd>Telescope commands<cr>", {desc="[S]earch [C]ommand"})
 vim.keymap.set('n', "<leader>sC", "<cmd>Telescope colorscheme<cr>", {desc="[S]earch [C]olor scheme"})
 vim.keymap.set('n', "<leader>sM", "<cmd>Telescope man_pages<cr>", {desc="[S]earch [M]an page"})
 vim.keymap.set("n", "<leader>sg", "<cmd>Telescope live_grep<cr>", {desc="[S]earch string in current working directory as you type using [G]rep"})
-vim.keymap.set("n", "<leader>sG", "<cmd>Telescope grep_string<cr>", {desc="[S]earch string under cursor in current working directory"})
 
 -- Teminal
---vim.keymap.set('n', "<leader>tp", "<cmd>lua _PYTHON_TOGGLE()<cr>", {desc="[T]erminal [P]ython"})
-vim.keymap.set('n', "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", {desc="[T]erminal [F]loat"})
-vim.keymap.set('n', "<leader>th", "<cmd>ToggleTerm size=10 direction=horizontal<cr>", {desc="[T]erminal [H]orizontal"})
-vim.keymap.set('n', "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", {desc="[T]erminal [V]ertical"})
-
--- LSP
-vim.keymap.set('n', "<leader>Li", "<cmd>LspInfo<cr>", {desc="[L]sp [I]nfo"})
+-- vim.keymap.set('n', "<leader>tp", "<cmd>lua _PYTHON_TOGGLE()<cr>", {desc="[T]erminal [P]ython"})
+-- vim.keymap.set('n', "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", {desc="[T]erminal [F]loat"})
+-- vim.keymap.set('n', "<leader>th", "<cmd>ToggleTerm size=10 direction=horizontal<cr>", {desc="[T]erminal [H]orizontal"})
+-- vim.keymap.set('n', "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", {desc="[T]erminal [V]ertical"})
 
 -- Workspaces
 vim.keymap.set('n', "<leader>wl", "<cmd>Telescope workspaces<CR>", {desc="List available workspaces"})
 
+-- Cpp man
+vim.keymap.set("n", "<leader>cc", function() require('cppman').open_cppman_for(vim.fn.expand("<cword>")) end)
+vim.keymap.set("n", "<leader>cm", function() require('cppman').input() end)
+
+-- Quick fix
+vim.keymap.set('n', "<leader>ct", "<cmd>lua require('ebeau.core.utils').toggle_qf()<cr>", {desc="Toggle quick-fix list"})
+
+HarpoonDeleteCurrentBuffer = function ()
+    local harpoon = require("harpoon")
+    local file_workspace_path = vim.fn.expand('%')
+    local harpoon_item = harpoon:list():get_by_display(file_workspace_path)
+
+    if harpoon_item then
+        harpoon:list():remove(harpoon_item)
+    end
+end
+
+-- Bookmarks
+-- m; Toggle mark on current line
+-- '<character> : Go to mark with <character> name 
+-- dm- Remove mark on current line
+vim.keymap.set("n", "dm<Space>", '<cmd>delmarks!<cr>')
+
+-- Harpoon
+-- 'd' in menu removes the currently selected entry
+vim.keymap.set("n", "<leader>ha", '<cmd>lua require("harpoon"):list():append()<cr>')
+vim.keymap.set("n", "<leader>hd", '<cmd>lua HarpoonDeleteCurrentBuffer()<cr>')
+vim.keymap.set("n", "<leader>ht", '<cmd>lua require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())<cr>')
+vim.keymap.set("n", "<M-1>", '<cmd>lua require("harpoon"):list():select(1)<cr>')
+vim.keymap.set("n", "<M-2>", '<cmd>lua require("harpoon"):list():select(2)<cr>')
+vim.keymap.set("n", "<M-3>", '<cmd>lua require("harpoon"):list():select(3)<cr>')
+vim.keymap.set("n", "<M-4>", '<cmd>lua require("harpoon"):list():select(4)<cr>')
+vim.keymap.set("n", "<M-5>", '<cmd>lua require("harpoon"):list():select(4)<cr>')
+
 -- Misc
-vim.keymap.set('n', "<leader>h", "<cmd>noh<cr>", {desc="Clear last search highlight"})
+vim.keymap.set('n', "<leader>dh", "<cmd>noh<cr>", {desc="Delete last search highlight"})
 vim.keymap.set('n', "<leader>H", "<cmd>Alpha<cr>", {desc="Show alpha [H]ome page"})
 

@@ -1,6 +1,5 @@
-local status_ok, workspaces = pcall(require, "workspaces")
-if not status_ok then
-    return
-end
+return {
+    "natecraddock/workspaces.nvim",
+    config = true,
+}
 
-workspaces.setup()

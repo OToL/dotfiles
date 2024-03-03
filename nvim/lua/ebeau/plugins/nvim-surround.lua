@@ -1,8 +1,3 @@
-local status_ok, surround = pcall(require, "nvim-surround")
-if not status_ok then
-    return
-end
-
 -- basic usage:
 --    * ys<object><char>: sarround object with <char>
 --    * ds<object><char>: delete <char> surrounding the object
@@ -13,4 +8,8 @@ end
 --       remove <b>HTML t*ags</b>           dst             remove HTML tags
 --       <b>or tag* types</b>               csth1<CR>       <h1>or tag types</h1>
 --       delete(functi*on calls)            dsf             function calls
-surround.setup()
+return {
+  "kylechui/nvim-surround",
+  event = { "BufReadPre", "BufNewFile" },
+  config = true,
+}
