@@ -1,18 +1,7 @@
 local M = {}
 
-LAZY_PLUGIN_SPEC = {}
 local uv = vim.loop
 local path_sep = uv.os_uname().version:match "Windows" and "\\" or "/"
-
-function M.enable_lazy_plugin(item)
-    local path_pattern_match = "[\\/]"
-
-    if (type(item) == "table") or (string.match(item, path_pattern_match) ~= nil) then
-      table.insert(LAZY_PLUGIN_SPEC, item)
-    else
-      table.insert(LAZY_PLUGIN_SPEC, { import = item })
-    end
-end
 
 -- Join path segments that were passed as input
 -- @return string
