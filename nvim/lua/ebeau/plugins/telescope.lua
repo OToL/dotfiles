@@ -1,3 +1,14 @@
+local make_exe
+local build_cmd
+
+if (string.match(vim.loop.os_uname().sysname, "^Windows")) then
+    make_exe = 'cmake'
+    build_cmd = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+else
+    make_exe = 'make'
+    build_cmd = 'make'
+end
+
 return {
     "nvim-telescope/telescope.nvim",
     branch = "0.1.x",
@@ -8,7 +19,11 @@ return {
         "nvim-tree/nvim-web-devicons",
         "nvim-telescope/telescope-file-browser.nvim",
         "nvim-lua/plenary.nvim",
-        { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+        {
+            "nvim-telescope/telescope-fzf-native.nvim", build = build_cmd, cond = function()
+                return vim.fn.executable(make_exe) == 1
+            end 
+        },
     },
     config = function()
         local telescope = require("telescope")
@@ -77,11 +92,11 @@ return {
                         n =
                         {
                             ["<bs>"]  = fb_actions.goto_parent_dir,
-                            ["<A-a>"] = fb_actions.create,
-                            ["<A-y>"] = fb_actions.copy,
-                            ["<A-m>"] = fb_actions.move,
-                            ["<A-r>"] = fb_actions.rename,
-                            ["<A-d>"] = fb_actions.remove,
+                            ["<M-a>"] = fb_actions.create,
+                            ["<M-y>"] = fb_actions.copy,
+                            ["<M-m>"] = fb_actions.move,
+                            ["<M-r>"] = fb_actions.rename,
+                            ["<M-d>"] = fb_actions.remove,
                             ["<C-w>"] = fb_actions.goto_cwd,
                             ["<C-f>"] = fb_actions.toggle_browser,
                             ["<C-g>"] = fb_actions.goto_parent_dir,
@@ -111,8 +126,8 @@ return {
                         },
                         i =
                         {
-                            ["<A-a>"] = fb_actions.create,
-                            ["<A-p>"] = fb_actions.copy,
+                            ["<M-a>"] = fb_actions.create,
+                            ["<M-p>"] = fb_actions.copy,
                             ["<C-bs>"] = fb_actions.goto_parent_dir,
                             ["<C-a>"] = fb_actions.select_all,
                             ["<C-l>"] = function()

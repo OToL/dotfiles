@@ -3,6 +3,7 @@ return {
     dependencies = {
         "rcarriga/nvim-dap-ui",
         "mfussenegger/nvim-dap-python",
+        "nvim-neotest/nvim-nio",
     },
     FocusDapBuffer = function(buffer_name)
         for _, win in ipairs(vim.fn.getwininfo()) do
@@ -24,6 +25,7 @@ return {
         local dap_ui_widgets = require("dap.ui.widgets")
         local dap_python = require("dap-python")
         local icons = require("ebeau.core.icons")
+        local utils = require("ebeau.core.utils")
 
         dap.set_log_level('INFO')
         dap.listeners.before.attach.dap_ui_config = function()
@@ -40,7 +42,7 @@ return {
         end
 
         dap_ui.setup()
-        dap_python.setup('/usr/bin/python3')
+        dap_python.setup(utils.find_program_path('python', true))
 
         --[[
         dap.configurations = {

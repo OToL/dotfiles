@@ -3,6 +3,54 @@ local M = {}
 local uv = vim.loop
 local path_sep = uv.os_uname().version:match "Windows" and "\\" or "/"
 
+-- Execute a system command line
+-- @return command line output as string
+function M.execute_command(command)
+    local handle = io.popen(command)
+    local result
+
+    if handle ~= nil then
+        result = handle:read("*a")
+        handle:close()
+    end
+
+    return result
+end
+
+-- Get the first location of a program from its name
+-- @return path to the program on nil
+function M.find_program_path(program_name, ignore_system_path)
+    local command
+    local is_windows = string.match(vim.loop.os_uname().sysname, "^Windows")
+
+    if (is_windows) then
+        command = "where " .. program_name
+    else -- Unix-like platforms (Linux, macOS)
+        command = "which " .. program_name
+    end
+
+    local result = M.execute_command(command)
+    local path_pattern = "[^\r\n]+"
+    local path = ""
+
+    if is_windows and ignore_system_path then
+        for path_val in result:gmatch(path_pattern) do
+            if string.find(path_val, "WindowsApps") == nil then
+                path = path_val
+                break
+            end
+        end
+    else
+        path = result:gmatch(path_pattern) -- Extract the first path from the result
+    end
+
+    if path ~= "" then
+        return path
+    else
+        return nil
+    end
+end
+
 -- Join path segments that were passed as input
 -- @return string
 function M.joinPaths(...)

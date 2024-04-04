@@ -1,5 +1,7 @@
 # SETUP
 
+- Install NodeJS: https://nodejs.org/
+  Required by Mason for some DAP
 - Install Git: https://git-scm.com/
 - Install neovim by either ...
     - Downloading binaries (https://github.com/neovim/neovim/releases)
