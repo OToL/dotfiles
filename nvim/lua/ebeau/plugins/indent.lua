@@ -1,3 +1,4 @@
+-- Display file identations and white spaces
 return {
     "lukas-reineke/indent-blankline.nvim",
     config = function()

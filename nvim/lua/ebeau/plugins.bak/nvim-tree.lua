@@ -1,3 +1,4 @@
+-- File System tree explorer
 return {
     "kyazdani42/nvim-tree.lua",
     dependencies = {

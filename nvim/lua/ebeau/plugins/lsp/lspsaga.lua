@@ -36,7 +36,7 @@ return {
                 delay = 600,
             },
             lightbulb = {
-                enable = true,
+                enable = false,
                 sign = false
             }
         })

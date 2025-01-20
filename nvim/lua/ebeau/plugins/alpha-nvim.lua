@@ -1,3 +1,4 @@
+-- Displays home page
 return {
     "goolord/alpha-nvim",
     event = "VimEnter",

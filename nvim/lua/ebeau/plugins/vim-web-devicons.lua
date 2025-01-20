@@ -1,3 +1,4 @@
+-- Icons library
 return {
     "nvim-tree/nvim-web-devicons",
     config = function()

@@ -28,7 +28,7 @@ require("lazy").setup(
         },
         -- silent notification from Lazy when changing a plugin file
         change_detection = {
-            enabled = true,
+            enabled = false,
             notify = false,
         },
     }

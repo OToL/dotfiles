@@ -17,7 +17,7 @@ return {
         "nvim-telescope/telescope-live-grep-args.nvim",
         "nvim-lua/plenary.nvim",
         "nvim-tree/nvim-web-devicons",
-        "nvim-telescope/telescope-file-browser.nvim",
+        -- "nvim-telescope/telescope-file-browser.nvim",
         "nvim-lua/plenary.nvim",
         {
             "nvim-telescope/telescope-fzf-native.nvim", build = build_cmd, cond = function()
@@ -29,7 +29,7 @@ return {
         local telescope = require("telescope")
         local actions = require("telescope.actions")
         local lga_actions = require("telescope-live-grep-args.actions")
-        local fb_actions = telescope.extensions.file_browser.actions
+        -- local fb_actions = telescope.extensions.file_browser.actions
 
         telescope.setup {
             defaults = {
@@ -85,7 +85,7 @@ return {
                 },
             },
             extensions = {
-                file_browser =
+                --[[ file_browser =
                 {
                     mappings =
                     {
@@ -104,7 +104,7 @@ return {
                             ["<C-a>"] = fb_actions.select_all,
                             -- open using system editor
                             ["<C-o>"] = fb_actions.open,
-                            ["<C-l> "] = function()
+                            ["<M-m>p"] = function()
                                 local entry = require("telescope.actions.state").get_selected_entry()
                                 local cb_opts = vim.opt.clipboard:get()
                                 if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
@@ -113,7 +113,7 @@ return {
                                 end
                                 vim.fn.setreg("", entry.path)
                             end,
-                            ["<C-y>"] = function()
+                            ["<M-m>y"] = function()
                                 local entry = require("telescope.actions.state").get_selected_entry()
                                 local cb_opts = vim.opt.clipboard:get()
                                 local filename = vim.fn.fnamemodify(entry.path, ":t")
@@ -130,7 +130,7 @@ return {
                             ["<M-p>"] = fb_actions.copy,
                             ["<C-bs>"] = fb_actions.goto_parent_dir,
                             ["<C-a>"] = fb_actions.select_all,
-                            ["<C-l>"] = function()
+                            ["<M-m>p"] = function()
                                 local entry = require("telescope.actions.state").get_selected_entry()
                                 local cb_opts = vim.opt.clipboard:get()
                                 if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
@@ -139,7 +139,7 @@ return {
                                 end
                                 vim.fn.setreg("", entry.path)
                             end,
-                            ["<C-y>"] = function()
+                            ["<M-m>y"] = function()
                                 local entry = require("telescope.actions.state").get_selected_entry()
                                 local cb_opts = vim.opt.clipboard:get()
                                 local filename = vim.fn.fnamemodify(entry.path, ":t")
@@ -151,7 +151,7 @@ return {
                             end,
                         }
                     }
-                },
+                }, ]]
                 live_grep_args = {
                     auto_quoting = true, -- enable/disable auto-quoting
                     -- define mappings, e.g.
@@ -172,6 +172,6 @@ return {
         -- Enable telescope extensions
         telescope.load_extension("fzf")
         telescope.load_extension("workspaces")
-        telescope.load_extension("file_browser")
+        -- telescope.load_extension("file_browser")
     end,
 }

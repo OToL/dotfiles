@@ -1,3 +1,4 @@
+-- Completion framework
 return {
     "hrsh7th/nvim-cmp",
     -- only load when entering insertion mode

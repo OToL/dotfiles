@@ -1,3 +1,4 @@
+-- File bookmarks
 return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",

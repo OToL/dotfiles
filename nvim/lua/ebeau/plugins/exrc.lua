@@ -1,3 +1,4 @@
+-- Automatically load & execute a script when opening a workspace
 return {
     "MunifTanjim/exrc.nvim",
     dependencies = {

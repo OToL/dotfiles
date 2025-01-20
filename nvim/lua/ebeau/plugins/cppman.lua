@@ -1,3 +1,4 @@
+-- Open cpp manua
 return {
     "madskjeldgaard/cppman.nvim",
     dependencies = {

@@ -1,3 +1,4 @@
+-- Color theme
 return {
     "catppuccin/nvim",
     -- make sure to load this before all the other start plugins

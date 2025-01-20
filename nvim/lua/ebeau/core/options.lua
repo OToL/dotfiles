@@ -1,3 +1,5 @@
+vim.g.have_nerd_font = true
+
 vim.opt.fileencoding="utf-8"            -- the encoding written to a file
 vim.opt.clipboard:append("unnamedplus") -- allows neovim to access the system clipboard
 vim.opt.visualbell = false              -- enable/disable vim bell
@@ -7,6 +9,7 @@ vim.opt.incsearch = true                -- performs search while typing
 vim.opt.ignorecase = true               -- ignore case when searching
 vim.opt.smartcase = true                -- search is case sensitive only when using capitals
 vim.opt.showmatch = true                -- shows all matches of the current search
+vim.opt.inccommand = 'split'            -- preview substitutions live, as you type!
 
 vim.opt.number = true                   -- show line numbers in the margin
 vim.opt.numberwidth = 1                 -- set number column width {default 4}
@@ -24,11 +27,11 @@ vim.opt.swapfile = false                -- creates a swapfile
 
 vim.opt.autoindent = true               -- copy indent from current line when starting a new line 
 vim.opt.smartindent = true              -- indenting behavior depends on the language/context
+vim.opt.breakindent = true              -- enable break indent
 vim.opt.expandtab = true                -- convert tabs to spaces
 vim.opt.tabstop = 4                     -- insert 4 spaces for a tab
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4                  -- number of spaces inserted for each indentation
-vim.opt.smartindent = true              -- indenting behavior depends on the language/context
 
 vim.opt.updatetime = 250                -- faster completion (4000ms default)
 vim.opt.hidden = true                   -- keep buffers opened when switching to another one
