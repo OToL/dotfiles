@@ -3,7 +3,8 @@ local build_cmd
 
 if (string.match(vim.loop.os_uname().sysname, "^Windows")) then
     make_exe = 'cmake'
-    build_cmd = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+    build_cmd =
+    'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
 else
     make_exe = 'make'
     build_cmd = 'make'
@@ -20,9 +21,11 @@ return {
         -- "nvim-telescope/telescope-file-browser.nvim",
         "nvim-lua/plenary.nvim",
         {
-            "nvim-telescope/telescope-fzf-native.nvim", build = build_cmd, cond = function()
+            "nvim-telescope/telescope-fzf-native.nvim",
+            build = build_cmd,
+            cond = function()
                 return vim.fn.executable(make_exe) == 1
-            end 
+            end
         },
     },
     config = function()
@@ -33,15 +36,28 @@ return {
 
         telescope.setup {
             defaults = {
+                vimgrep_arguments = {
+                    'rg',
+                    '--no-ignore', -- don't respect .gitignore
+                    '--hidden', -- include dotfiles
+                    '--no-heading',
+                    '--with-filename',
+                    '--line-number',
+                    '--column',
+                    '--smart-case',
+                    '--color=never',
+                },
+
                 selection_caret = " ",
                 prompt_prefix = "🔍 ",
                 path_display = { "truncate" },
 
+                -- "%.o",
                 file_ignore_patterns = {
                     ".git", ".backup", ".swap", ".langservers", ".session", ".undo",
                     ".cache", ".vscode-server", "%.pdb", "%.cab", "%.exe", "%.csv",
                     "%.dll", "%.EXE", "%.bl", "%.a", "%.so", "%.lib", "%.msi",
-                    ".vs", "%.mst", "%.zip", "%.7z", "%.doc", "%.docx", "%.obj", "%.lib", "%.o",
+                    ".vs", "%.mst", "%.zip", "%.7z", "%.doc", "%.docx", "%.obj", "%.lib",
                     "%.a", "%.bin"
                 },
 

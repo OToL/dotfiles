@@ -4,7 +4,7 @@ return {
     event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-        local icons = require("ebeau.core.icons")
+        local icons = require("core.icons")
         local alpha = require("alpha")
         local dashboard = require("alpha.themes.dashboard")
         -- https://patorjk.com/software/taag/#p=display&f=Graffiti&t=OTol
@@ -52,6 +52,9 @@ return {
         -- Disable folding on alpha buffer
         vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
     end,
+    keys = {
+        { "<leader>M", ":Alpha<CR>", desc = "Show alpha [H]ome page" },
+    }
 }
 
 

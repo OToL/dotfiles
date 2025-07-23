@@ -10,4 +10,7 @@ return {
             }
         })
     end,
+    keys = {
+        { "<leader>sM", ':Telescope marks<cr>' },
+    }
 }

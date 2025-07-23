@@ -42,8 +42,8 @@ return {
         local dap_ui = require("dapui")
         local dap_ui_widgets = require("dap.ui.widgets")
         local dap_python = require("dap-python")
-        local icons = require("ebeau.core.icons")
-        local utils = require("ebeau.core.utils")
+        local icons = require("core.icons")
+        local utils = require("core.utils")
 
         dap.set_log_level('INFO')
         dap.listeners.before.attach.dap_ui_config = function()
@@ -71,7 +71,7 @@ return {
             name = "lldb"
         }
 
-        dap.adapters["cpptools"] = {
+       dap.adapters["cpptools"] = {
             type = 'executable',
             id = "cpptools",
             name = "cpptools",
@@ -98,6 +98,8 @@ return {
 
         -- Debug session workflow
         vim.keymap.set('n', '<F9>', dap.toggle_breakpoint, {})
+        vim.keymap.set('n', '<C-F9>', "<Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", {})
+        vim.keymap.set('n', '<C-S-F9>', "<Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", {})
         vim.keymap.set('n', '<F10>', dap.step_over, {})
         vim.keymap.set('n', '<F11>', dap.step_into, {})
         vim.keymap.set('n', '<S-F11>', dap.step_out, {})
@@ -107,9 +109,7 @@ return {
             dap.terminate()
             dap.run_last()
         end)
-        vim.keymap.set("n", "<Leader>dl", dap.run_last, {})
         vim.keymap.set("n", "<Leader>dB", dap.clear_breakpoints, {})
-        -- nnoremap <silent> <Leader>B <Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
         -- nnoremap <silent> <Leader>lp <Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
 
         -- Auxiliary options
@@ -120,16 +120,11 @@ return {
         vim.keymap.set('n', '<leader>dt', dap_ui.toggle, { desc = 'Debug: See last session result.' })
 
         -- DAP windows focus
-        vim.keymap.set("n", "<Leader>dw",
-            "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Watches')<cr><cr>", {})
-        vim.keymap.set("n", "<Leader>db",
-            "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Breakpoints')<cr><cr>", {})
-        vim.keymap.set("n", "<Leader>dv",
-            "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Scopes')<cr><cr>", {})
-        vim.keymap.set("n", "<Leader>ds",
-            "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Stacks')<cr><cr>", {})
-        vim.keymap.set('n', '<Leader>dc', '<Cmd>lua require("dap").select_config()<CR>',
-            { noremap = true, silent = true })
+        vim.keymap.set("n", "<Leader>dw", "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Watches')<cr><cr>", {})
+        vim.keymap.set("n", "<Leader>db", "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Breakpoints')<cr><cr>", {})
+        vim.keymap.set("n", "<Leader>dv", "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Scopes')<cr><cr>", {})
+        vim.keymap.set("n", "<Leader>ds", "<cmd> lua require('ebeau.plugins.nvim-dap').FocusDapBuffer('DAP Stacks')<cr><cr>", {})
+        vim.keymap.set('n', '<Leader>dc', '<Cmd>lua require("dap").select_config()<CR>', { noremap = true, silent = true })
 
         dap.listeners.after.event_initialized['dapui_config'] = dap_ui.open
         dap.listeners.before.event_terminated['dapui_config'] = dap_ui.close

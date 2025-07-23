@@ -1,3 +1,4 @@
+-- used for editable code preview i.e. similer to Visual Studio S-F12
 return {
   {
     "glepnir/lspsaga.nvim",

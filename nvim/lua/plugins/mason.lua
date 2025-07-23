@@ -1,3 +1,4 @@
+-- Handles installation of many core extensions: lsp, dap, formatter, etc.
 return {
     "williamboman/mason.nvim",
     dependencies = {
@@ -32,7 +33,8 @@ return {
                 'pyright',
             },
             -- auto-install configured servers (with lspconfig)
-            automatic_installation = true, -- not the same as ensure_installed
+            automatic_installation = false, -- not the same as ensure_installed
+            automatic_enable = false -- do not automatically start lsp
         })
 
         -- debugger, linter, formatter, etc.
