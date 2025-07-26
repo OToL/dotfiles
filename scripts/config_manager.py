@@ -11,6 +11,9 @@ from enum import Enum
 @dataclass
 class ConfigDeployDesc:
     path: str
+
+@dataclass
+class Settings:
     backup: bool = True
 
 class Mode(Enum):
@@ -64,7 +67,7 @@ def backup_tool_config(path):
         copy_file(path, backup_path)
 
 
-def deploy_tool_config(tool_name, tool_cfg_path, tool_cfg_deploy_desc):
+def deploy_tool_config(tool_name, tool_cfg_path, tool_cfg_deploy_desc, settings):
     print(f"Deploying config '{tool_name}'")
 
     system_path = expand_path(tool_cfg_deploy_desc.path)
@@ -73,7 +76,7 @@ def deploy_tool_config(tool_name, tool_cfg_path, tool_cfg_deploy_desc):
     if not os.path.exists(config_path):
        raise RuntimeError(f"Cannot find system path {config_path}")
 
-    if tool_cfg_deploy_desc.backup:
+    if settings.backup:
         backup_tool_config(system_path)
 
     if os.path.isdir(config_path):
@@ -116,6 +119,11 @@ if __name__ == "__main__" :
     with open(cfg_path, "r") as f:
         config_doc = json.load(f)
 
+    settings_elem = config_doc.get("settings") 
+    settings = Settings()
+    if settings_elem:
+       settings = ConfigDeployDesc(**settings_elem) 
+
     tools_elem = config_doc["tools"]
     for tool_name, desc_elem in tools_elem.items():
        tool_deploy_elem = desc_elem["deploy"].get(system_name)
@@ -131,5 +139,6 @@ if __name__ == "__main__" :
        else:
             deploy_tool_config(tool_name = tool_name,
                                tool_cfg_path = os.path.join(curr_dir_path, desc_elem["config"]),
-                               tool_cfg_deploy_desc = tool_deploy_system_desc)
+                               tool_cfg_deploy_desc = tool_deploy_system_desc,
+                               settings=settings)
 

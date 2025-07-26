@@ -1,12 +1,14 @@
 {
     "version" : "1.0.0",
+    "options": {
+        "backup" : true
+    },
     "tools" : {
         "neovim" : {
             "config" : "nvim",
             "deploy" : {
                 "darwin" : {
-                    "path" : "~/.config/nvim/",
-                    "backup" : true
+                    "path" : "~/.config/nvim/"
                 }
             }
         },
@@ -14,8 +16,7 @@
             "config" : "tmux/.tmux.conf",
             "deploy" : {
                 "darwin" : {
-                    "path" : "~/.tmux.conf",
-                    "backup" : true
+                    "path" : "~/.tmux.conf"
                 }
             }
         }
