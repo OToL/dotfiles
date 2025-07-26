@@ -1,0 +1,23 @@
+{
+    "version" : "1.0.0",
+    "tools" : {
+        "neovim" : {
+            "config" : "nvim",
+            "deploy" : {
+                "darwin" : {
+                    "path" : "~/.config/nvim/",
+                    "backup" : true
+                }
+            }
+        },
+        "tmux" : {
+            "config" : "tmux/.tmux.conf",
+            "deploy" : {
+                "darwin" : {
+                    "path" : "~/.tmux.conf",
+                    "backup" : true
+                }
+            }
+        }
+    }
+}
