@@ -52,7 +52,7 @@ def delete_file(file_path):
         return
     os.remove(file_path)
 
-def backup_tool_config(path):
+def backup_config(path):
     if not os.path.exists(path):
         return
 
@@ -67,17 +67,17 @@ def backup_tool_config(path):
         copy_file(path, backup_path)
 
 
-def deploy_tool_config(tool_name, tool_cfg_path, tool_cfg_deploy_desc, settings):
-    print(f"Deploying config '{tool_name}'")
+def deploy_config(cfg_name, cfg_path, cfg_deploy_desc, settings):
+    print(f"Deploying config '{cfg_name}'")
 
-    system_path = expand_path(tool_cfg_deploy_desc.path)
-    config_path = expand_path(tool_cfg_path)
+    system_path = expand_path(cfg_deploy_desc.path)
+    config_path = expand_path(cfg_path)
 
     if not os.path.exists(config_path):
        raise RuntimeError(f"Cannot find system path {config_path}")
 
     if settings.backup:
-        backup_tool_config(system_path)
+        backup_config(system_path)
 
     if os.path.isdir(config_path):
         delete_dir(system_path)
@@ -86,11 +86,11 @@ def deploy_tool_config(tool_name, tool_cfg_path, tool_cfg_deploy_desc, settings)
         delete_file(system_path)
         copy_file(config_path, system_path)
 
-def update_tool_config(tool_name, tool_cfg_path, tool_cfg_deploy_desc):
-    print(f"Updating config '{tool_name}'")
+def update_config(cfg_name, cfg_path, cfg_deploy_desc):
+    print(f"Updating config '{cfg_name}'")
 
-    system_path = expand_path(tool_cfg_deploy_desc.path)
-    config_path = expand_path(tool_cfg_path)
+    system_path = expand_path(cfg_deploy_desc.path)
+    config_path = expand_path(cfg_path)
 
     if not os.path.exists(system_path):
         raise RuntimeError(f"Cannot find system path {system_path}")
@@ -122,23 +122,23 @@ if __name__ == "__main__" :
     settings_elem = config_doc.get("settings") 
     settings = Settings()
     if settings_elem:
-       settings = ConfigDeployDesc(**settings_elem) 
+       settings = Settings(**settings_elem) 
 
-    tools_elem = config_doc["tools"]
-    for tool_name, desc_elem in tools_elem.items():
-       tool_deploy_elem = desc_elem["deploy"].get(system_name)
-       if not tool_deploy_elem:
+    configs_elem = config_doc["configs"]
+    for cfg_name, desc_elem in configs_elem.items():
+       deploy_elem = desc_elem["deploy"].get(system_name)
+       if not deploy_elem:
            continue
 
-       tool_deploy_system_desc = ConfigDeployDesc(**tool_deploy_elem) 
+       deploy_system_desc = ConfigDeployDesc(**deploy_elem) 
 
        if mode == Mode.UPDATE:
-            update_tool_config(tool_name = tool_name,
-                               tool_cfg_path = os.path.join(curr_dir_path, desc_elem["config"]),
-                               tool_cfg_deploy_desc = tool_deploy_system_desc)
+            update_config(cfg_name = cfg_name, 
+                          cfg_path = os.path.join(curr_dir_path, desc_elem["config"]),
+                          cfg_deploy_desc = deploy_system_desc)
        else:
-            deploy_tool_config(tool_name = tool_name,
-                               tool_cfg_path = os.path.join(curr_dir_path, desc_elem["config"]),
-                               tool_cfg_deploy_desc = tool_deploy_system_desc,
-                               settings=settings)
+            deploy_config(cfg_name = cfg_name, 
+                          cfg_path = os.path.join(curr_dir_path, desc_elem["config"]),
+                          cfg_deploy_desc = deploy_system_desc,
+                          settings=settings)
 

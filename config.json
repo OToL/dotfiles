@@ -1,9 +1,9 @@
 {
     "version" : "1.0.0",
-    "options": {
+    "settings": {
         "backup" : true
     },
-    "tools" : {
+    "configs" : {
         "neovim" : {
             "config" : "nvim",
             "deploy" : {
