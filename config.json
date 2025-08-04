@@ -23,6 +23,9 @@
             "deploy" : {
                 "darwin" : {
                     "path" : "~/.tmux.conf"
+                },
+                "linux" : {
+                    "path" : "~/.tmux.conf"
                 }
             }
         }
