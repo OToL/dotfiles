@@ -12,6 +12,9 @@
                 },
                 "windows" : {
                     "path" : "%LOCALAPPDATA%/nvim"
+                },
+                "linux" : { 
+                    "path" : "~/.config/nvim"
                 }
             }
         },

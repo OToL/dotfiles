@@ -22,7 +22,7 @@ class Mode(Enum):
 
 def get_system_codename() :
     system_name = platform.system().lower()
-    if system_name in ("darwin", "windows"):
+    if system_name in ("darwin", "windows", "linux"):
         return system_name
     else:
         raise RuntimeError(f"Unknown system '{system_name}'")
