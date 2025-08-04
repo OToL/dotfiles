@@ -2,3 +2,4 @@
 CMakeUserPresets.json
 lazy-lock.json
 .luarc.json
+.vscode/

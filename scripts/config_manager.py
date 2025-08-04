@@ -22,7 +22,7 @@ class Mode(Enum):
 
 def get_system_codename() :
     system_name = platform.system().lower()
-    if system_name == "darwin":
+    if system_name in ("darwin", "windows"):
         return system_name
     else:
         raise RuntimeError(f"Unknown system '{system_name}'")
@@ -36,7 +36,7 @@ def copy_dir(src_path, dst_path):
     shutil.copytree(src_path, dst_path, dirs_exist_ok=True) 
 
 def expand_path(path):
-    return os.path.normpath(os.path.expanduser(path))
+    return os.path.normpath(os.path.expanduser(os.path.expandvars((path))))
 
 def delete_dir(dir_path):
     if not os.path.exists(dir_path):

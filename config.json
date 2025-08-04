@@ -9,6 +9,9 @@
             "deploy" : {
                 "darwin" : {
                     "path" : "~/.config/nvim/"
+                },
+                "windows" : {
+                    "path" : "%LOCALAPPDATA%/nvim"
                 }
             }
         },
