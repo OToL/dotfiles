@@ -7,24 +7,18 @@
         "neovim" : {
             "config" : "nvim",
             "deploy" : {
-                "darwin" : {
+                "unix" : {
                     "path" : "~/.config/nvim/"
                 },
                 "windows" : {
                     "path" : "%LOCALAPPDATA%/nvim"
-                },
-                "linux" : { 
-                    "path" : "~/.config/nvim"
                 }
             }
         },
         "tmux" : {
             "config" : "tmux/.tmux.conf",
             "deploy" : {
-                "darwin" : {
-                    "path" : "~/.tmux.conf"
-                },
-                "linux" : {
+                "unix" : {
                     "path" : "~/.tmux.conf"
                 }
             }

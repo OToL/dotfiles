@@ -20,6 +20,11 @@ class Mode(Enum):
     UPDATE = 1
     DEPLOY = 2
 
+def get_system_family_codename(system_name):
+    if system_name in ("darwin", "linux"):
+        return "unix"
+    return None
+
 def get_system_codename() :
     system_name = platform.system().lower()
     if system_name in ("darwin", "windows", "linux"):
@@ -104,7 +109,12 @@ def update_config(cfg_name, cfg_path, cfg_deploy_desc):
 
 if __name__ == "__main__" :
     system_name = get_system_codename()
-    print(f"System: {system_name}")
+    system_family_name = get_system_family_codename(system_name)
+
+    if system_family_name:
+        print(f"System: {system_name} ({system_family_name})")
+    else:
+        print(f"System: {system_name}")
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=str, dest="cfg_path", required=True)
@@ -127,6 +137,10 @@ if __name__ == "__main__" :
     configs_elem = config_doc["configs"]
     for cfg_name, desc_elem in configs_elem.items():
        deploy_elem = desc_elem["deploy"].get(system_name)
+
+       if not deploy_elem and system_family_name:
+           deploy_elem = desc_elem["deploy"].get(system_family_name)
+    
        if not deploy_elem:
            continue
 
