@@ -105,7 +105,7 @@ return {
         vim.keymap.set('n', '<S-F11>', dap.step_out, {})
         vim.keymap.set('n', '<F5>', dap.continue, {})
         vim.keymap.set('n', '<S-F5>', dap.terminate, {})
-        vim.keymap.set('n', '<C-S-F5>', function()
+        vim.keymap.set('n', '<M-F5>', function()
             dap.terminate()
             dap.run_last()
         end)

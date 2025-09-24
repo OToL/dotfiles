@@ -1,6 +1,7 @@
 local cmd = vim.cmd
 
-cmd "command! Build :wa | Make"
+-- TODO(ebeau): rework using vim.cmd
+cmd "command! Build silent! wa | Make"
 cmd "command! CargoBuild :wa | Dispatch cargo build"
 cmd "command! CargoCheck :wa | Dispatch cargo check"
 cmd "command! W :w"
