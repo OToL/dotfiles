@@ -97,6 +97,8 @@ vim.keymap.set('n', "<space>ml", ":execute 'normal! L'<cr>")
 -- quick-fix list (:copen, :cclose/ccl, etc.) navigation
 vim.keymap.set("n", "<F4>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<S-F4>", "<cmd>cprev<CR>zz")
+vim.keymap.set('n', '<leader>qo', ':copen<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>qc', ':cclose<CR>', { noremap = true, silent = true })
 -- location list (:lopen, :lclose/lcl, etc.) navigation
 vim.keymap.set("n", "<F3>", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<S-F3>", "<cmd>lprev<CR>zz")

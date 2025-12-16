@@ -34,6 +34,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4                  -- number of spaces inserted for each indentation
 
 vim.opt.updatetime = 250                -- faster completion (4000ms default)
+vim.opt.ttimeoutlen = 10                -- Wait 10ms for key codes (default 50ms)
 vim.opt.hidden = true                   -- keep buffers opened when switching to another one
 vim.opt.cursorline = true               -- highlight the current line
 vim.opt.showmode = false                -- show current mode (insert, normal, etc.) at the bottom of the screen

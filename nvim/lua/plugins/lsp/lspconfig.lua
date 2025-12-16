@@ -13,8 +13,6 @@ return {
     },
     config = function()
 
-        local lspconfig = require("lspconfig")
-
         -- highlight usages of the entity located under the cursor
         local function lsp_highlight_document(client)
             if client.server_capabilities.documentHighlightProvider then
@@ -36,6 +34,29 @@ return {
             if client.name == "eslint" then
                 vim.cmd.LspStop('eslint')
                 return
+            end
+
+            -- Add ClangdSwitchSourceHeader command for clangd
+            if client.name == "clangd" then
+                vim.api.nvim_buf_create_user_command(bufnr, 'ClangdSwitchSourceHeader', function()
+                    local params = {
+                        uri = vim.uri_from_bufnr(0)
+                    }
+
+                    client.request('textDocument/switchSourceHeader', params, function(err, result)
+                        if err then
+                            vim.notify('Error switching source/header: ' .. vim.inspect(err), vim.log.levels.ERROR)
+                            return
+                        end
+
+                        if not result or result == '' then
+                            vim.notify('No corresponding source/header file found', vim.log.levels.WARN)
+                            return
+                        end
+
+                        vim.cmd('edit ' .. vim.uri_to_fname(result))
+                    end, bufnr)
+                end, { desc = 'Switch between source and header file' })
             end
 
             lsp_highlight_document(client)
@@ -89,46 +110,59 @@ return {
         -- local clangd_path = ('%s/%s'):format(clangd_package:get_install_path(), clangd_filename or 'clangd')
         local clangd_path = "/usr/local/bin/clangd"
 
-        lspconfig['clangd'].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            cmd =
-            {
+        -- Configure clangd using new vim.lsp.config API
+        vim.lsp.config('clangd', {
+            cmd = {
                 clangd_path,
                 "--header-insertion=never",
                 "--background-index",
                 "--completion-style=detailed", -- do not collapse overloads in one entry
-                -- obsolete options
-                -- "--cross-file-rename",
-                -- "--suggest-missing-includes"
-            }
-        })
-
-        -- configure python server
-        lspconfig["pyright"].setup({
+            },
+            filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+            root_markers = { '.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac', '.git' },
             capabilities = capabilities,
             on_attach = on_attach,
         })
 
-        -- configure json server
-        lspconfig["jsonls"].setup({
+        -- Configure pyright
+        vim.lsp.config('pyright', {
+            cmd = { 'pyright-langserver', '--stdio' },
+            filetypes = { 'python' },
+            root_markers = { 'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', 'Pipfile', '.git' },
             capabilities = capabilities,
             on_attach = on_attach,
         })
 
-        -- configure html server
-        lspconfig["html"].setup({
+        -- Configure jsonls
+        vim.lsp.config('jsonls', {
+            cmd = { 'vscode-json-language-server', '--stdio' },
+            filetypes = { 'json', 'jsonc' },
             capabilities = capabilities,
             on_attach = on_attach,
         })
 
-        -- configure html server
-        lspconfig["cmake"].setup({
+        -- Configure html
+        vim.lsp.config('html', {
+            cmd = { 'vscode-html-language-server', '--stdio' },
+            filetypes = { 'html' },
             capabilities = capabilities,
             on_attach = on_attach,
         })
 
-        lspconfig["rust_analyzer"].setup({
+        -- Configure cmake
+        vim.lsp.config('cmake', {
+            cmd = { 'cmake-language-server' },
+            filetypes = { 'cmake' },
+            root_markers = { 'CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake' },
+            capabilities = capabilities,
+            on_attach = on_attach,
+        })
+
+        -- Configure rust_analyzer
+        vim.lsp.config('rust_analyzer', {
+            cmd = { 'rust-analyzer' },
+            filetypes = { 'rust' },
+            root_markers = { 'Cargo.toml', 'rust-project.json', '.git' },
             settings = {
                 ["rust-analyzer"] = {
                     completion = {
@@ -141,14 +175,20 @@ return {
             on_attach = on_attach,
         })
 
-        -- configure typescript server with plugin
-        lspconfig["ts_ls"].setup({
+        -- Configure ts_ls
+        vim.lsp.config('ts_ls', {
+            cmd = { 'typescript-language-server', '--stdio' },
+            filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+            root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
             capabilities = capabilities,
             on_attach = on_attach,
         })
 
-        -- configure lua server (with special settings)
-        lspconfig["lua_ls"].setup({
+        -- Configure lua_ls
+        vim.lsp.config('lua_ls', {
+            cmd = { 'lua-language-server' },
+            filetypes = { 'lua' },
+            root_markers = { '.luarc.json', '.luarc.jsonc', '.luacheckrc', '.stylua.toml', 'stylua.toml', 'selene.toml', 'selene.yml', '.git' },
             capabilities = capabilities,
             on_attach = on_attach,
             settings = { -- custom settings for lua
@@ -167,6 +207,16 @@ return {
                 },
             },
         })
+
+        -- Enable all configured LSP servers
+        vim.lsp.enable('clangd')
+        vim.lsp.enable('pyright')
+        vim.lsp.enable('jsonls')
+        vim.lsp.enable('html')
+        vim.lsp.enable('cmake')
+        vim.lsp.enable('rust_analyzer')
+        vim.lsp.enable('ts_ls')
+        vim.lsp.enable('lua_ls')
     end,
 }
 

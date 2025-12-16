@@ -12,16 +12,19 @@ return {
                     include_surrounding_whitespace = true,
 
                     keymaps = {
+                        -- deactivated because 'l' was conflicting with movement in visual mode and adding a delay 'cause nvim was waiting on a 
+                        -- potential next key for those shortcuts
+                        -- ["l="] = { query = "@assignment.lhs", desc = "Select left hand side of an assignment" },
+                        -- ["r="] = { query = "@assignment.rhs", desc = "Select right hand side of an assignment" },
+                        -- ["l:"] = { query = "@property.lhs", desc = "Select left part of an object property" },
+
                         -- You can use the capture groups defined in textobjects.scm
                         ["a="] = { query = "@assignment.outer", desc = "Select outer part of an assignment" },
                         ["i="] = { query = "@assignment.inner", desc = "Select inner part of an assignment" },
-                        ["l="] = { query = "@assignment.lhs", desc = "Select left hand side of an assignment" },
-                        ["r="] = { query = "@assignment.rhs", desc = "Select right hand side of an assignment" },
 
                         -- works for javascript/typescript files (custom capture I created in after/queries/ecma/textobjects.scm)
                         ["a:"] = { query = "@property.outer", desc = "Select outer part of an object property" },
                         ["i:"] = { query = "@property.inner", desc = "Select inner part of an object property" },
-                        ["l:"] = { query = "@property.lhs", desc = "Select left part of an object property" },
                         ["r:"] = { query = "@property.rhs", desc = "Select right part of an object property" },
 
                         ["aa"] = { query = "@parameter.outer", desc = "Select outer part of a parameter/argument" },
@@ -61,6 +64,7 @@ return {
                     -- whether to set jumps in the jumplist
                     set_jumps = true,
                     goto_next_start = {
+                        ["]a"] = { query = "@parameter.inner", desc = "Next argument" },
                         ["]f"] = { query = "@call.outer", desc = "Next function call start" },
                         ["]m"] = { query = "@function.outer", desc = "Next method/function def start" },
                         ["]c"] = { query = "@class.outer", desc = "Next class start" },
@@ -80,6 +84,7 @@ return {
                         ["]L"] = { query = "@loop.outer", desc = "Next loop end" },
                     },
                     goto_previous_start = {
+                        ["[a"] = { query = "@parameter.inner", desc = "Prev argument" },
                         ["[f"] = { query = "@call.outer", desc = "Prev function call start" },
                         ["[m"] = { query = "@function.outer", desc = "Prev method/function def start" },
                         ["[c"] = { query = "@class.outer", desc = "Prev class start" },

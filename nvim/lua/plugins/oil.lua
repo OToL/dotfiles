@@ -27,9 +27,10 @@ return {
                 ["<C-p>"] = "actions.preview",
                 ["<C-r>"] = "actions.refresh",
                 ["<M-w>"] = "actions.close",
-                ["<M-m>p"] = "actions.copy_entry_path",
-                ["<M-m>pP"] = {
-
+                -- Copy full path
+                ["<M-m>Y"] = "actions.copy_entry_path",
+                -- Copy workspace (relative) path
+                ["<M-m>y"] = {
                     callback = function()
                         local oil = require("oil")
                         local entry = oil.get_cursor_entry()
