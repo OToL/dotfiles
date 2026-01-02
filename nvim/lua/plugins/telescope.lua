@@ -12,7 +12,7 @@ end
 
 return {
     "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
+    branch = "master",
     dependencies = {
         "natecraddock/workspaces.nvim",
         "nvim-telescope/telescope-live-grep-args.nvim",
