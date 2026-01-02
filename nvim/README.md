@@ -1,11 +1,17 @@
 # SETUP
 
-- Install NodeJS: https://nodejs.org/
-  Required by Mason for some DAP
-- Install Git: https://git-scm.com/
-- Install neovim by either ...
+- Install universal dependencies ...
+    - NodeJS (https://nodejs.org/): Mason DAPs
+    - Git (https://git-scm.com/): Git plugin
+    - CMake (https://cmake.org/): Telescope fzf compilation 
+- Install platform dependencies ...
+    - Windows
+        - chocolatey package manager
+        - fzf via chocolatey (choco install fzf)
+        - ripgrep via chocolatey
+- Install neovim via either ...
     - Downloading binaries (https://github.com/neovim/neovim/releases)
-    - Using OS package manager (e.g. brew on MacOS)
+    - Using OS package manager (e.g. brew on MacOS, chocolatey on Windows)
 - Install Nerd Fonts
     - https://github.com/ryanoasis/nerd-fonts
     - https://www.geekbits.io/how-to-setup-nerd-fonts-in-windows/
