@@ -23,6 +23,6 @@ return {
         },
     },
     keys = {
-        { "<leader>zt", ":ZenMode<CR>", desc = "Toggle Zen Mode" },
+        { "<leader>tz", ":ZenMode<CR>", desc = "Toggle Zen Mode" },
     }
 }

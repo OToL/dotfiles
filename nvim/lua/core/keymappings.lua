@@ -186,7 +186,7 @@ vim.keymap.set("n", "<leader>cc", function() require('cppman').open_cppman_for(v
 vim.keymap.set("n", "<leader>cm", function() require('cppman').input() end)
 
 -- Quick fix
-vim.keymap.set('n', "<leader>qt", "<cmd>lua require('core.utils').toggle_qf()<cr>", { desc = "Toggle quick-fix list" })
+vim.keymap.set('n', "<leader>tq", "<cmd>lua require('core.utils').toggle_qf()<cr>", { desc = "Toggle quick-fix list" })
 
 -- Bookmarks
 -- m; Toggle mark on current line
