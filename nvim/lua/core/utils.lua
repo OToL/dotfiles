@@ -3,6 +3,18 @@ local M = {}
 local uv = vim.loop
 local path_sep = uv.os_uname().version:match "Windows" and "\\" or "/"
 
+-- Returns current lowercase platform name
+function M.get_platform_name()
+    local sysname = vim.loop.os_uname().sysname:lower()
+
+    if sysname:find("^windows") then
+         return "windows"
+    end
+
+    return sysname
+end
+
+
 -- Execute a system command line
 -- @return command line output as string
 function M.execute_command(command)

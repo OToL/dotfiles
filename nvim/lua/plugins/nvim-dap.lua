@@ -71,7 +71,13 @@ return {
 
         dap_ui.setup()
 
-        local python_path = utils.find_program_path('python3', true)
+        local python_interpreter = "python3"
+        if utils.get_platform_name() == "windows" then
+            python_interpreter = "python"
+        end
+
+        local python_path = utils.find_program_path(python_interpreter, true)
+        -- local python_path = "C:\\Program Files\\Python313\\python.exe"
         dap_python.setup(python_path)
 
         dap.adapters["lldb"] = {
@@ -129,7 +135,7 @@ return {
         vim.keymap.set({ 'n', 'v' }, "<Leader>dp", dap_ui_widgets.preview, {})
 
         -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-        vim.keymap.set('n', '<leader>dt', dap_ui.toggle, { desc = 'Debug: See last session result.' })
+        vim.keymap.set('n', '<leader>td', dap_ui.toggle, { desc = 'Debug: See last session result.' })
 
         -- DAP windows focus
         vim.keymap.set("n", "<Leader>dw",
