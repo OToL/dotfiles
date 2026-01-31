@@ -27,6 +27,8 @@ return {
                 ["<C-p>"] = "actions.preview",
                 ["<C-r>"] = "actions.refresh",
                 ["<M-w>"] = "actions.close",
+                ["J"] = "actions.preview_scroll_down",
+                ["K"] = "actions.preview_scroll_up",
                 -- Copy full path
                 ["<M-m>Y"] = "actions.copy_entry_path",
                 -- Copy workspace (relative) path

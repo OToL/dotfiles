@@ -22,6 +22,14 @@
                     "path" : "~/.tmux.conf"
                 }
             }
+        },
+        "yazi" : {
+            "config" : "yazi",
+            "deploy" : {
+                "unix" : {
+                    "path" : "~/.config/yazi/"
+                }
+            }
         }
     }
 }

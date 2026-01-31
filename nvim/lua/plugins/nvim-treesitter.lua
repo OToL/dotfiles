@@ -8,19 +8,17 @@ return {
     config = function()
 
         -- configure treesitter
-        require('nvim-treesitter').setup({
+        require('nvim-treesitter.configs').setup({
             -- enable syntax highlighting
             highlight = {
                 enable = true,
             },
             auto_install = true,
             -- enable indentation
-            indent =
-                {
-                    -- disabled because it was adding an extra indent when editing c++
-                    -- enable = true
-                    -- disable = { "python", "css", "cpp" }
-                },
+            indent = {
+                enable = true,
+                disable = { "cpp", "c" },  -- Only disable for C/C++, keep Python enabled
+            },
             -- enable autotagging (w/ nvim-ts-autotag plugin)
             autotag =
                 {

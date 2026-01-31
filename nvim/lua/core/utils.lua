@@ -8,12 +8,11 @@ function M.get_platform_name()
     local sysname = vim.loop.os_uname().sysname:lower()
 
     if sysname:find("^windows") then
-         return "windows"
+        return "windows"
     end
 
     return sysname
 end
-
 
 -- Execute a system command line
 -- @return command line output as string
@@ -141,7 +140,7 @@ function M.make()
 
     local cmd = vim.fn.expandcmd(makeprg)
 
-    local function on_event(job_id, data, event)
+    local function on_event(_, data, event)
         if event == "stdout" or event == "stderr" then
             if data then
                 vim.list_extend(lines, data)
@@ -158,7 +157,7 @@ function M.make()
         end
     end
 
-    local job_id =
+    local _ =
         vim.fn.jobstart(
             cmd,
             {
@@ -172,44 +171,31 @@ function M.make()
 end
 
 M.toggle_qf = function()
-  local qf_exists = false
-  for _, win in pairs(vim.fn.getwininfo()) do
-    if win["quickfix"] == 1 then
-      qf_exists = true
+    local qf_exists = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["quickfix"] == 1 then
+            qf_exists = true
+        end
     end
-  end
-  if qf_exists == true then
-    vim.cmd "cclose"
-    return
-  end
-  --if not vim.tbl_isempty(vim.fn.getqflist()) then
+    if qf_exists == true then
+        vim.cmd "cclose"
+        return
+    end
+    --if not vim.tbl_isempty(vim.fn.getqflist()) then
     vim.cmd "copen"
-  --end
+    --end
 end
 
 M.close_floating_windows = function()
-  local closed_windows = {}
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= "" then  -- is_floating_window?                                    
-      vim.api.nvim_win_close(win, false)  -- do not force
-      table.insert(closed_windows, win)
+    local closed_windows = {}
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local config = vim.api.nvim_win_get_config(win)
+        if config.relative ~= "" then          -- is_floating_window?
+            vim.api.nvim_win_close(win, false) -- do not force
+            table.insert(closed_windows, win)
+        end
     end
-  end
-  print(string.format('Closed %d windows: %s', #closed_windows, vim.inspect(closed_windows)))
-end
-
-
-M.close_floating_windows = function()
-  local closed_windows = {}
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= "" then  -- is_floating_window?                                    
-      vim.api.nvim_win_close(win, false)  -- do not force
-      table.insert(closed_windows, win)
-    end
-  end
-  print(string.format('Closed %d floating windows: %s', #closed_windows, vim.inspect(closed_windows)))
+    print(string.format('Closed %d floating windows: %s', #closed_windows, vim.inspect(closed_windows)))
 end
 
 return M
