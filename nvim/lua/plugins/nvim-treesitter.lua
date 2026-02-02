@@ -7,8 +7,22 @@ return {
     },
     config = function()
 
+        local configs_found, treesitter_configs = pcall(require, "nvim-treesitter.configs")
+        local main_found, treesitter_main = pcall(require, "nvim-treesitter")
+
+        local ts = nil
+
+        if configs_found then
+            ts = treesitter_configs
+        elseif main_found then
+            ts = treesitter_main
+        else
+            print("Treesitter not found on this system!")
+            return
+        end
+
         -- configure treesitter
-        require('nvim-treesitter.configs').setup({
+        ts.setup({
             -- enable syntax highlighting
             highlight = {
                 enable = true,
