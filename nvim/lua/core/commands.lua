@@ -61,3 +61,16 @@ vim.api.nvim_create_user_command('TSStatus', function()
         print("✗ Treesitter is NOT active for this buffer")
     end
 end, {})
+
+-- close all buffers which are not from the current workspace
+vim.api.nvim_create_user_command("BufCloseNonWorkspace", function()
+    local cwd = vim.fs.normalize(vim.fn.getcwd())
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(buf) then
+        local name = vim.fs.normalize(vim.api.nvim_buf_get_name(buf))
+        if name ~= "" and not name:find(cwd, 1, true) then
+          vim.api.nvim_buf_delete(buf, { force = false })
+        end
+      end
+    end
+  end, {})
