@@ -6,10 +6,10 @@ cmd "command! CargoBuild :wa | Dispatch cargo build"
 cmd "command! CargoCheck :wa | Dispatch cargo check"
 cmd "command! W :w"
 
-vim.cmd [[ 
+vim.cmd [[
   augroup _general_settings
     autocmd!
-    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o 
+    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
   augroup end
 ]]
 
@@ -17,11 +17,11 @@ vim.cmd [[
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = '*',
 })
 
 -- Hide tmux status line when in nvim
@@ -49,3 +49,15 @@ vim.api.nvim_create_autocmd("VimLeave", {
     callback = toggle_tmux_status_bar,
 })
 
+-- Add to your init.lua or a separate config file
+vim.api.nvim_create_user_command('TSStatus', function()
+    local buf = vim.api.nvim_get_current_buf()
+    local highlighter = vim.treesitter.highlighter.active[buf]
+
+    if highlighter then
+        local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
+        print("✓ Treesitter is active for: " .. (lang or vim.bo[buf].filetype))
+    else
+        print("✗ Treesitter is NOT active for this buffer")
+    end
+end, {})
