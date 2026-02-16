@@ -217,6 +217,9 @@ return {
         vim.lsp.enable('rust_analyzer')
         vim.lsp.enable('ts_ls')
         vim.lsp.enable('lua_ls')
+
+        -- Enable debug logging
+        -- vim.lsp.set_log_level("debug")
     end,
 }
 
