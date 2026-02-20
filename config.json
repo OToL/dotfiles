@@ -1,33 +1,36 @@
 {
-    "version" : "1.0.0",
+    "version": "1.0.0",
     "settings": {
-        "backup" : true
+        "backup": true
     },
-    "configs" : {
-        "neovim" : {
-            "config" : "nvim",
-            "deploy" : {
-                "unix" : {
-                    "path" : "~/.config/nvim/"
+    "configs": {
+        "neovim": {
+            "config": "nvim",
+            "deploy": {
+                "unix": {
+                    "path": "~/.config/nvim/"
                 },
-                "windows" : {
-                    "path" : "%LOCALAPPDATA%/nvim"
+                "windows": {
+                    "path": "%LOCALAPPDATA%/nvim"
                 }
             }
         },
-        "tmux" : {
-            "config" : "tmux/.tmux.conf",
-            "deploy" : {
-                "unix" : {
-                    "path" : "~/.tmux.conf"
+        "tmux": {
+            "config": "tmux/.tmux.conf",
+            "deploy": {
+                "unix": {
+                    "path": "~/.tmux.conf"
                 }
             }
         },
-        "yazi" : {
-            "config" : "yazi",
-            "deploy" : {
-                "unix" : {
-                    "path" : "~/.config/yazi/"
+        "yazi": {
+            "config": "yazi",
+            "deploy": {
+                "unix": {
+                    "path": "~/.config/yazi/"
+                },
+                "windows": {
+                    "path": "%APPDATA%/yazi/config"
                 }
             }
         }
