@@ -31,6 +31,22 @@ return {
                 ["K"] = "actions.preview_scroll_up",
                 -- Copy full path
                 ["<M-m>Y"] = "actions.copy_entry_path",
+                -- Telescope grep from Oil's current directory
+                ["<Leader>sg"] = {
+                    callback = function()
+                        local dir = require("oil").get_current_dir()
+                        require("telescope").extensions.live_grep_args.live_grep_args({ search_dirs = { dir } })
+                    end,
+                    desc = "Grep in current dir",
+                },
+                -- Telescope find files from Oil's current directory
+                ["<Leader>sf"] = {
+                    callback = function()
+                        local dir = require("oil").get_current_dir()
+                        require("telescope.builtin").find_files({ cwd = dir })
+                    end,
+                    desc = "Find files in current dir",
+                },
                 -- Copy workspace (relative) path
                 ["<M-m>y"] = {
                     callback = function()

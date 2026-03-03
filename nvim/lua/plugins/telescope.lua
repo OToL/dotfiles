@@ -39,7 +39,7 @@ return {
                 vimgrep_arguments = {
                     'rg',
                     '--no-ignore', -- don't respect .gitignore
-                    '--hidden', -- include dotfiles
+                    '--hidden',    -- include dotfiles
                     '--no-heading',
                     '--with-filename',
                     '--line-number',
@@ -101,80 +101,15 @@ return {
                 },
             },
             extensions = {
-                --[[ file_browser =
-                {
-                    mappings =
-                    {
-                        n =
-                        {
-                            ["<bs>"]  = fb_actions.goto_parent_dir,
-                            ["<M-a>"] = fb_actions.create,
-                            ["<M-y>"] = fb_actions.copy,
-                            ["<M-m>"] = fb_actions.move,
-                            ["<M-r>"] = fb_actions.rename,
-                            ["<M-d>"] = fb_actions.remove,
-                            ["<C-w>"] = fb_actions.goto_cwd,
-                            ["<C-f>"] = fb_actions.toggle_browser,
-                            ["<C-g>"] = fb_actions.goto_parent_dir,
-                            ["<C-h>"] = fb_actions.toggle_hidden,
-                            ["<C-a>"] = fb_actions.select_all,
-                            -- open using system editor
-                            ["<C-o>"] = fb_actions.open,
-                            ["<M-m>p"] = function()
-                                local entry = require("telescope.actions.state").get_selected_entry()
-                                local cb_opts = vim.opt.clipboard:get()
-                                if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
-                                if vim.tbl_contains(cb_opts, "unnamedplus") then
-                                    vim.fn.setreg("+", entry.path)
-                                end
-                                vim.fn.setreg("", entry.path)
-                            end,
-                            ["<M-m>y"] = function()
-                                local entry = require("telescope.actions.state").get_selected_entry()
-                                local cb_opts = vim.opt.clipboard:get()
-                                local filename = vim.fn.fnamemodify(entry.path, ":t")
-                                if vim.tbl_contains(cb_opts, "unnaed") then vim.fn.setreg("*", filename) end
-                                if vim.tbl_contains(cb_opts, "unnamedplus") then
-                                    vim.fn.setreg("+", filename)
-                                end
-                                vim.fn.setreg("", filename)
-                            end,
-                        },
-                        i =
-                        {
-                            ["<M-a>"] = fb_actions.create,
-                            ["<M-p>"] = fb_actions.copy,
-                            ["<C-bs>"] = fb_actions.goto_parent_dir,
-                            ["<C-a>"] = fb_actions.select_all,
-                            ["<M-m>p"] = function()
-                                local entry = require("telescope.actions.state").get_selected_entry()
-                                local cb_opts = vim.opt.clipboard:get()
-                                if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
-                                if vim.tbl_contains(cb_opts, "unnamedplus") then
-                                    vim.fn.setreg("+", entry.path)
-                                end
-                                vim.fn.setreg("", entry.path)
-                            end,
-                            ["<M-m>y"] = function()
-                                local entry = require("telescope.actions.state").get_selected_entry()
-                                local cb_opts = vim.opt.clipboard:get()
-                                local filename = vim.fn.fnamemodify(entry.path, ":t")
-                                if vim.tbl_contains(cb_opts, "unnaed") then vim.fn.setreg("*", filename) end
-                                if vim.tbl_contains(cb_opts, "unnamedplus") then
-                                    vim.fn.setreg("+", filename)
-                                end
-                                vim.fn.setreg("", filename)
-                            end,
-                        }
-                    }
-                }, ]]
                 live_grep_args = {
                     auto_quoting = true, -- enable/disable auto-quoting
                     -- define mappings, e.g.
                     mappings = {         -- extend mappings
                         i = {
-                            ["<A-k>"] = lga_actions.quote_prompt(),
-                            ["<A-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+                            ["<C-k>"] = lga_actions.quote_prompt(),
+                            ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+                            -- freeze the current list and start a fuzzy search in the frozen list
+                            ["<C-space>"] = actions.to_fuzzy_refine,
                         },
                     },
                     -- ... also accepts theme settings, for example:
@@ -188,6 +123,7 @@ return {
         -- Enable telescope extensions
         telescope.load_extension("fzf")
         telescope.load_extension("workspaces")
+        telescope.load_extension("live_grep_args")
         -- telescope.load_extension("file_browser")
     end,
 }

@@ -1,5 +1,7 @@
 vim.g.have_nerd_font = true
 
+vim.opt.wrapscan = true                 -- wrap when reaching end of list e.g. quickfix list
+
 vim.opt.fileencoding="utf-8"            -- the encoding written to a file
 vim.opt.clipboard:append("unnamedplus") -- allows neovim to access the system clipboard
 vim.opt.visualbell = false              -- enable/disable vim bell

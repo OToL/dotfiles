@@ -174,8 +174,8 @@ vim.keymap.set('n', "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "[S]ear
 vim.keymap.set('n', "<leader>sc", "<cmd>Telescope commands<cr>", { desc = "[S]earch [C]ommand" })
 vim.keymap.set('n', "<leader>sC", "<cmd>Telescope colorscheme<cr>", { desc = "[S]earch [C]olor scheme" })
 vim.keymap.set('n', "<leader>sM", "<cmd>Telescope man_pages<cr>", { desc = "[S]earch [M]an page" })
-vim.keymap.set("n", "<leader>sg", "<cmd>Telescope live_grep<cr>",
-    { desc = "[S]earch string in current working directory as you type using [G]rep" })
+-- vim.keymap.set("n", "<leader>sg", "<cmd>Telescope live_grep<cr>", { desc = "[S]earch string in current working directory as you type using [G]rep" })
+vim.keymap.set("n", "<leader>sg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set('n', "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "[S]earch [D]iagnostics" })
 
 -- Workspaces
@@ -186,6 +186,7 @@ vim.keymap.set("n", "<leader>cc", function() require('cppman').open_cppman_for(v
 vim.keymap.set("n", "<leader>cm", function() require('cppman').input() end)
 
 -- Quick fix
+-- :cc jump to current entry in quick fix list
 vim.keymap.set('n', "<leader>tq", "<cmd>lua require('core.utils').toggle_qf()<cr>", { desc = "Toggle quick-fix list" })
 
 -- Bookmarks
