@@ -23,6 +23,17 @@
                 }
             }
         },
+        "wezterm": {
+            "config": "wezterm/wezterm.lua",
+            "deploy": {
+                "unix": {
+                    "path": "~/.config/wezterm/wezterm.lua"
+                },
+                "windows": {
+                    "path": "%USERPROFILE%/.wezterm.lua"
+                }
+            }
+        },
         "yazi": {
             "config": "yazi",
             "deploy": {

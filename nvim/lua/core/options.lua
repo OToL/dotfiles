@@ -19,7 +19,7 @@ vim.opt.relativenumber = true           -- show relative line numbers in the mar
 
 vim.opt.scrolloff = 4                   -- scrolls the text so that there are always at least N lines visible above and below the cursor
 vim.opt.sidescrolloff = 4               -- scrolls the text so that there are always at least N lines visible to the left and right of the cursor
-vim.opt.colorcolumn = "150"             -- vertical bar showing max characters per line
+vim.opt.colorcolumn = "200"             -- vertical bar showing max characters per line
 vim.opt.signcolumn="yes"                -- always show the sign column, otherwise it would shift the text each time
 
 vim.opt.backup = false                  -- creates a backup file

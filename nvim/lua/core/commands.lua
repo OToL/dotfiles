@@ -49,6 +49,13 @@ vim.api.nvim_create_autocmd("VimLeave", {
     callback = toggle_tmux_status_bar,
 })
 
+-- Filter out terminal from buffer list
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function()
+    vim.opt_local.buflisted = false
+  end,
+})
+
 -- Add to your init.lua or a separate config file
 vim.api.nvim_create_user_command('TSStatus', function()
     local buf = vim.api.nvim_get_current_buf()
@@ -74,3 +81,6 @@ vim.api.nvim_create_user_command("BufCloseNonWorkspace", function()
       end
     end
   end, {})
+
+
+
