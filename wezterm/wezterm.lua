@@ -1,3 +1,5 @@
+---@diagnostic disable: unused-local
+
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
 local act = wezterm.action
@@ -9,7 +11,7 @@ local config = wezterm.config_builder()
 --                    CORE                               -
 ----------------------------------------------------------
 
-config.font_size = 11
+config.font_size = 9
 config.window_decorations = "RESIZE"
 config.color_scheme = 'Catppuccin Mocha'
 
@@ -49,14 +51,7 @@ end)
 ----------------------------------------------------------
 --                  WORKSPACE MANAGER                    -
 ----------------------------------------------------------
--- One palette entry "Workspaces…" opens a fuzzy list of workspaces.
--- In the list: Enter switches, Ctrl+R renames, Ctrl+D deletes.
--- The Ctrl+R / Ctrl+D trick uses a key_table activated alongside the
--- InputSelector — its bindings preempt the selector, stash an intent,
--- then synthesise Enter so the selector's callback dispatches it.
 
--- Path to the wezterm CLI binary, derived from the running GUI's location
--- so this config stays portable across Windows / macOS / Linux.
 local WEZTERM_EXE = wezterm.executable_dir .. '/' .. (wezterm.target_triple:find('windows') and 'wezterm.exe' or 'wezterm')
 
 local pending_workspace_action = nil
@@ -182,11 +177,21 @@ config.key_tables = {
   },
 }
 
+----------------------------------------------------------
+--                   KEY BINDINGS                        -
+----------------------------------------------------------
+
 config.keys = {
-  -- Open the Workspaces manager. Overrides the default Ctrl+Shift+W
-  -- (CloseCurrentTab) — close a tab via the palette or the × in the tab bar.
-  { key = 'W', mods = 'CTRL|SHIFT', action = open_workspace_manager },
+  { key = 'L', mods = 'CTRL|SHIFT', action = open_workspace_manager },
 }
+
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = 'ALT',
+    action = act.ActivateTab(i - 1),
+  })
+end
 
 ----------------------------------------------------------
 --                  COMMAND PALETTE                      -
