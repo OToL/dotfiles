@@ -11,7 +11,7 @@ local config = wezterm.config_builder()
 --                    CORE                               -
 ----------------------------------------------------------
 
-config.font_size = 9
+config.font_size = 10
 config.window_decorations = "RESIZE"
 config.color_scheme = 'Catppuccin Mocha'
 
@@ -47,6 +47,14 @@ wezterm.on('update-right-status', function(window, _pane)
     { Foreground = { AnsiColor = 'Yellow' } },  { Text = ' ' .. time .. ' ' },
   }))
 end)
+
+----------------------------------------------------------
+--                       PLUGINS                         -
+----------------------------------------------------------
+
+local sessions = wezterm.plugin.require(
+  "https://github.com/abidibo/wezterm-sessions"
+)
 
 ----------------------------------------------------------
 --                  WORKSPACE MANAGER                    -
@@ -109,6 +117,17 @@ local function prompt_delete_workspace(window, pane, name)
     pane
   )
 end
+
+local kill_other_panes = wezterm.action_callback(function(window, pane)
+  local cur_id = pane:pane_id()
+  for _, p in ipairs(window:active_tab():panes()) do
+    if p:pane_id() ~= cur_id then
+      wezterm.run_child_process {
+        WEZTERM_EXE, 'cli', 'kill-pane', '--pane-id', tostring(p:pane_id()),
+      }
+    end
+  end
+end)
 
 open_workspace_manager = wezterm.action_callback(function(window, pane)
   local active = window:active_workspace()
@@ -181,8 +200,65 @@ config.key_tables = {
 --                   KEY BINDINGS                        -
 ----------------------------------------------------------
 
+-- Smart resize: Right/Up grow the pane; Left/Down shrink it.
+-- Growing expands the current pane (falls back to opposite edge if needed).
+-- Shrinking expands the neighbor toward us, which reduces our size.
+local function smart_resize(dir)
+  return wezterm.action_callback(function(window, pane)
+    local panes = window:active_tab():panes_with_info()
+    local cur_id = pane:pane_id()
+    local cur
+    for _, p in ipairs(panes) do
+      if p.pane:pane_id() == cur_id then cur = p; break end
+    end
+    if not cur then return end
+
+    local right_pane, left_pane, bottom_pane, top_pane
+    for _, p in ipairs(panes) do
+      if p.pane:pane_id() ~= cur_id then
+        if p.left >= cur.left + cur.width  and not right_pane  then right_pane  = p.pane end
+        if p.left + p.width <= cur.left    and not left_pane   then left_pane   = p.pane end
+        if p.top  >= cur.top  + cur.height and not bottom_pane then bottom_pane = p.pane end
+        if p.top  + p.height <= cur.top    and not top_pane    then top_pane    = p.pane end
+      end
+    end
+
+    if dir == 'Right' then      -- wider: expand current pane rightward, fallback leftward
+      local d = right_pane and 'Right' or 'Left'
+      window:perform_action(act.AdjustPaneSize { d, 5 }, pane)
+    elseif dir == 'Left' then   -- narrower: expand neighbor toward us
+      local neighbor = right_pane or left_pane
+      local d        = right_pane and 'Left' or 'Right'
+      if neighbor then window:perform_action(act.AdjustPaneSize { d, 5 }, neighbor) end
+    elseif dir == 'Up' then     -- taller: expand current pane upward, fallback downward
+      local d = top_pane and 'Up' or 'Down'
+      window:perform_action(act.AdjustPaneSize { d, 5 }, pane)
+    elseif dir == 'Down' then   -- shorter: expand neighbor toward us
+      local neighbor = bottom_pane or top_pane
+      local d        = bottom_pane and 'Up' or 'Down'
+      if neighbor then window:perform_action(act.AdjustPaneSize { d, 5 }, neighbor) end
+    end
+  end)
+end
+
+config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
+
 config.keys = {
-  { key = 'L', mods = 'CTRL|SHIFT', action = open_workspace_manager },
+    -- base
+    { key = 'l', mods = 'LEADER', action = open_workspace_manager },
+    { key = 'w', mods = 'LEADER', action = act.CloseCurrentPane { confirm = false } },
+    { key = 'v', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+    { key = 's', mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
+    { key = 'm', mods = 'LEADER', action = act.TogglePaneZoomState },
+    { key = 'k', mods = 'LEADER', action = kill_other_panes },
+    { key = 'h', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Left' },
+    { key = 'j', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Down' },
+    { key = 'k', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Up' },
+    { key = 'l', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Right' },
+    { key = 'LeftArrow',  mods = 'CTRL|SHIFT', action = smart_resize('Left') },
+    { key = 'RightArrow', mods = 'CTRL|SHIFT', action = smart_resize('Right') },
+    { key = 'UpArrow',    mods = 'CTRL|SHIFT', action = smart_resize('Up') },
+    { key = 'DownArrow',  mods = 'CTRL|SHIFT', action = smart_resize('Down') },
 }
 
 for i = 1, 9 do
@@ -197,8 +273,34 @@ end
 --                  COMMAND PALETTE                      -
 ----------------------------------------------------------
 
-wezterm.on('augment-command-palette', function(_window, _pane)
+wezterm.on('augment-command-palette', function(_, _)
   return {
+    {
+      brief = 'Save session',
+      icon = 'md_content_save',
+      action = wezterm.action_callback(function(window, _)
+        sessions.save_state(window, true)
+      end),
+    },
+    {
+      brief = 'Load session',
+      icon = 'md_folder_open',
+      action = wezterm.action_callback(function(window, pane)
+        sessions.load_state(window, pane)
+      end),
+    },
+    {
+      brief = 'Restore session',
+      icon = 'md_restore',
+      action = wezterm.action_callback(function(window, _)
+        sessions.restore_state(window)
+      end),
+    },
+    {
+      brief = 'Delete session',
+      icon = 'md_delete',
+      action = act.EmitEvent('delete_session'),
+    },
     {
       brief = 'Rename current tab',
       icon = 'md_rename_box',
@@ -208,7 +310,7 @@ wezterm.on('augment-command-palette', function(_window, _pane)
           { Foreground = { AnsiColor = 'Fuchsia' } },
           { Text = 'Rename tab: ' },
         },
-        action = wezterm.action_callback(function(window, _pane, line)
+        action = wezterm.action_callback(function(window, _, line)
           if line then
             window:active_tab():set_title(line)
           end
@@ -224,7 +326,7 @@ wezterm.on('augment-command-palette', function(_window, _pane)
           { Foreground = { AnsiColor = 'Fuchsia' } },
           { Text = 'Rename workspace: ' },
         },
-        action = wezterm.action_callback(function(window, _pane, line)
+        action = wezterm.action_callback(function(window, _, line)
           if line and line ~= '' then
             wezterm.mux.rename_workspace(window:active_workspace(), line)
           end
