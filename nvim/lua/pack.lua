@@ -126,7 +126,11 @@ require("ufo").setup({})
     vim.keymap.set('n', "zC", "<cmd>lua require('ufo').closeAllFolds()<CR>", { desc = "Close all folds" })
     vim.keymap.set('n', "zk", "<cmd>lua require('ufo').peekFoldedLinesUnderCursor()<CR>", { desc = "Preview folded block" })
 
-require('smart-splits').setup({ multiplexer_backend = 'wezterm' })
+require('smart-splits').setup(
+    {
+        multiplexer_backend = 'wezterm',
+        disable_multiplexer_nav_when_zoomed = false,
+    })
     vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
     vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
     vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
