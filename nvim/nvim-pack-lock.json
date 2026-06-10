@@ -155,6 +155,10 @@
       "rev": "119e8961014c9bfaf1487bf3c2a393d254f337e2",
       "src": "https://github.com/kevinhwang91/promise-async"
     },
+    "smart-splits.nvim": {
+      "rev": "6806149fd36d1c5e797debe3e18b2c07219b685a",
+      "src": "https://github.com/mrjones2014/smart-splits.nvim"
+    },
     "telescope-fzf-native.nvim": {
       "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"

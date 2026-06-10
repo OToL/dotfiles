@@ -51,6 +51,7 @@ vim.pack.add({
     github("mfussenegger/nvim-dap-python"),
     github("jake-stewart/multicursor.nvim"),
     github("tpope/vim-repeat"),
+    github("mrjones2014/smart-splits.nvim"),
 
     github("mfussenegger/nvim-dap"),
     github("williamboman/mason.nvim"),
@@ -124,6 +125,13 @@ require("ufo").setup({})
     vim.keymap.set('n', "zO", "<cmd>lua require('ufo').openAllFolds()<CR>", { desc = "Open all folds" })
     vim.keymap.set('n', "zC", "<cmd>lua require('ufo').closeAllFolds()<CR>", { desc = "Close all folds" })
     vim.keymap.set('n', "zk", "<cmd>lua require('ufo').peekFoldedLinesUnderCursor()<CR>", { desc = "Preview folded block" })
+
+require('smart-splits').setup({ multiplexer_backend = 'wezterm' })
+    vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+    vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+    vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+    vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+    vim.keymap.set('n', '<C-\\>', require('smart-splits').move_cursor_previous)
 
 require("marks").setup({
     force_write_shada = true,

@@ -14,7 +14,6 @@ local config = wezterm.config_builder()
 config.font_size = 10
 config.window_decorations = "RESIZE"
 config.color_scheme = 'Catppuccin Mocha'
-
 ----------------------------------------------------------
 --                  PERFORMANCE                          -
 ----------------------------------------------------------
@@ -52,9 +51,8 @@ end)
 --                       PLUGINS                         -
 ----------------------------------------------------------
 
-local sessions = wezterm.plugin.require(
-  "https://github.com/abidibo/wezterm-sessions"
-)
+local sessions = wezterm.plugin.require( "https://github.com/abidibo/wezterm-sessions")
+local smart_splits = wezterm.plugin.require('https://github.com/mrjones2014/smart-splits.nvim')
 
 ----------------------------------------------------------
 --                  WORKSPACE MANAGER                    -
@@ -250,7 +248,7 @@ config.keys = {
     { key = 'v', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
     { key = 's', mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
     { key = 'm', mods = 'LEADER', action = act.TogglePaneZoomState },
-    { key = 'k', mods = 'LEADER', action = kill_other_panes },
+    { key = 'o', mods = 'LEADER', action = kill_other_panes },
     { key = 'h', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Left' },
     { key = 'j', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Down' },
     { key = 'k', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Up' },
@@ -268,6 +266,17 @@ for i = 1, 9 do
     action = act.ActivateTab(i - 1),
   })
 end
+
+-- must come after config.keys is defined; apply_to_config appends into it
+smart_splits.apply_to_config(config, {
+  direction_keys = {
+    move = { 'h', 'j', 'k', 'l' },
+  },
+  modifiers = {
+    move = 'CTRL',
+  },
+  log_level = 'info',
+})
 
 ----------------------------------------------------------
 --                  COMMAND PALETTE                      -
