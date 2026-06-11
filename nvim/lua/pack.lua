@@ -60,7 +60,6 @@ vim.pack.add({
     github("nvim-telescope/telescope.nvim"),
     github("kevinhwang91/nvim-ufo"),         -- depends on promise async
     github("echasnovski/mini.statusline"),   -- depends on web devicons
-    github("goolord/alpha-nvim"),            -- Welcome page - depends on icons
     github("madskjeldgaard/cppman.nvim"),    -- depends on nui
     github("akinsho/bufferline.nvim"),       -- depends on webicons
     github("ray-x/lsp_signature.nvim"),
@@ -88,7 +87,6 @@ require("nvim-web-devicons").set_icon({
 })
 require("configs.mini_statusline").setup()
 require("configs.maximize").setup()
-require("configs.alpha").setup()
 require("configs.dial").setup()
 require("configs.oil").setup()
 require("configs.telescope").setup()

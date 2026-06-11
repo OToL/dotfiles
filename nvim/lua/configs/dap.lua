@@ -1,5 +1,4 @@
 ---@diagnostic disable: unused-function, unused-local
-
 local M = {}
 
 local function select_dap_configuration()

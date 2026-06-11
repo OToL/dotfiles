@@ -4,10 +4,6 @@
       "rev": "e30b7f2008e52442154b66f7c519bfd2f1e32acb",
       "src": "https://github.com/numToStr/Comment.nvim"
     },
-    "alpha-nvim": {
-      "rev": "6c6a89d5b068b5251c8bdf0dd57bb921bcfeeb09",
-      "src": "https://github.com/goolord/alpha-nvim"
-    },
     "bigfile.nvim": {
       "rev": "33eb067e3d7029ac77e081cfe7c45361887a311a",
       "src": "https://github.com/LunarVim/bigfile.nvim"
