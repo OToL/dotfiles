@@ -208,4 +208,11 @@ M.get_nvim_pipe_path = function()
     end
 end
 
+M.run_cmd_sync = function (cmd, working_dir)
+  local obj = vim.system(cmd, { cwd = working_dir }):wait()
+  if obj.code ~= 0 then
+    error(('cmd failed (%d): %s\n%s'):format(obj.code, table.concat(cmd, ' '), obj.stderr))
+  end
+end
+
 return M

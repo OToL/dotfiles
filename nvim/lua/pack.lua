@@ -3,9 +3,12 @@ vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
     if kind == 'delete' then return end
 
     if name == 'telescope-fzf-native.nvim' then
+        local utils = require("utils")
         local plugin_path = vim.fn.stdpath('data') .. '/site/pack/core/opt/' .. name
-        local build_cmd = { vim.o.shell, vim.o.shellcmdflag, 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
-        vim.system(build_cmd, { cwd = plugin_path })
+
+        utils.run_cmd_sync({ 'cmake', '-S', '.', '-B', 'build', '-DCMAKE_BUILD_TYPE=Release' }, plugin_path)
+        utils.run_cmd_sync({ 'cmake', '--build', 'build', '--config', 'Release' }, plugin_path)
+        utils.run_cmd_sync({ 'cmake', '--install', 'build', '--prefix', 'build' }, plugin_path)
     end
 
     if name == 'nvim-treesitter' and kind == 'update' then
