@@ -147,7 +147,8 @@ M.setup = function()
             end, { buffer = bufnr, noremap = true, silent = true, expr = true })
             vim.keymap.set('i', '<Tab>', function()
                 if vim.snippet.active({ direction = 1 }) then
-                    return vim.api.nvim_replace_termcodes('<Cmd>lua vim.snippet.jump(1)<CR>', true, false, true)
+                    vim.snippet.jump(1)
+                    return ''
                 elseif vim.fn.pumvisible() == 1 then
                     return vim.api.nvim_replace_termcodes('<C-n>', true, false, true)
                 end
@@ -155,7 +156,8 @@ M.setup = function()
             end, { buffer = bufnr, noremap = true, silent = true, expr = true })
             vim.keymap.set('i', '<S-Tab>', function()
                 if vim.snippet.active({ direction = -1 }) then
-                    return vim.api.nvim_replace_termcodes('<Cmd>lua vim.snippet.jump(-1)<CR>', true, false, true)
+                    vim.snippet.jump(-1)
+                    return ''
                 elseif vim.fn.pumvisible() == 1 then
                     return vim.api.nvim_replace_termcodes('<C-p>', true, false, true)
                 end
@@ -171,7 +173,7 @@ M.setup = function()
             -- symbols
             local symbols = { 'class', 'constructor', 'operator', 'interface', 'struct', 'method', 'function' }
             vim.keymap.set('n', '<leader>bs', function() require('telescope.builtin').lsp_document_symbols({ symbols = symbols }) end, opts)
-            vim.keymap.set('n', '<leader>ss', function() require('telescope.builtin').lsp_workspace_symbols({ symbols = symbols }) end, opts)
+            vim.keymap.set('n', '<leader>ss', function() require('telescope.builtin').lsp_dynamic_workspace_symbols({ symbols = symbols }) end, opts)
 
             vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
                 vim.lsp.buf.format({ async = true })
@@ -200,9 +202,16 @@ M.setup = function()
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
 
+    --[[ local clangd_path = vim.fn.stdpath('data') .. '/mason/bin/clangd'
+    if vim.fn.filereadable(clangd_path) == 0 then
+        clangd_path = '/usr/local/bin/clangd';
+    end ]]
+    -- local clangd_path = '/usr/local/bin/clangd';
+    local clangd_path = "/Users/emmanuelbeau/Documents/dev/llvm-project/build/bin/clangd"
+
     vim.lsp.config('clangd', {
         cmd = {
-            '/usr/local/bin/clangd',
+            clangd_path,
             '--header-insertion=never',
             '--background-index',
             '--completion-style=detailed',

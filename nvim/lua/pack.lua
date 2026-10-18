@@ -51,7 +51,10 @@ vim.pack.add({
     github("mfussenegger/nvim-dap-python"),
     github("jake-stewart/multicursor.nvim"),
     github("tpope/vim-repeat"),
-    github("mrjones2014/smart-splits.nvim"),
+    -- TODO: migrate to v3 once smart-splits-nvim/backend-wezterm is stable: add that backend plugin,
+    -- set mux = { backend = 'smart-splits-backend-wezterm' } in setup, and point wezterm.lua's
+    -- plugin.require at https://github.com/smart-splits-nvim/backend-wezterm
+    { src = github("mrjones2014/smart-splits.nvim"), version = "v2.1.1-final" },
 
     github("mfussenegger/nvim-dap"),
     github("williamboman/mason.nvim"),
@@ -86,7 +89,10 @@ require("nvim-web-devicons").set_icon({
     },
 })
 require("configs.mini_statusline").setup()
+
 require("configs.maximize").setup()
+vim.keymap.set('n', "<c-w>m", "<cmd>lua require('maximize').toggle()<cr>", { desc = "Toggle maximize" })
+
 require("configs.dial").setup()
 require("configs.oil").setup()
 require("configs.telescope").setup()
@@ -126,24 +132,31 @@ require("ufo").setup({})
 
 require('smart-splits').setup(
     {
-        multiplexer_backend = 'wezterm',
+        multiplexer_integration = 'wezterm',
         disable_multiplexer_nav_when_zoomed = false,
     })
     vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
     vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
     vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
     vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
-    vim.keymap.set('n', '<C-\\>', require('smart-splits').move_cursor_previous)
 
+-- m; : Toggle mark on current line
+-- '<character> : Go to mark with <character> name
+-- dm- : Remove mark on current line
+-- ]b [b : prev/next bookmark
 require("marks").setup({
+    default_mappings = false,
     force_write_shada = true,
     mappings =
     {
         next = "]b",
         prev = "[b",
+        toggle = "m;",
+        delete_line = "dm",
+        delete_buf = "dM",
     }
     })
-    vim.keymap.set('n', "<leader>sM", ":Telescope marks<cr>")
+    vim.keymap.set('n', "<leader>sm", ":Telescope marks<cr>")
 
 require("configs.treesitter").setup()
 

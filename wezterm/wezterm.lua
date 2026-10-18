@@ -14,14 +14,18 @@ local config = wezterm.config_builder()
 config.font_size = 10
 config.window_decorations = "RESIZE"
 config.color_scheme = 'Catppuccin Mocha'
+
 ----------------------------------------------------------
 --                  PERFORMANCE                          -
 ----------------------------------------------------------
 
-config.webgpu_power_preference = 'HighPerformance'   -- force dGPU (RTX 5070 Ti) over iGPU
+-- config.webgpu_power_preference = 'HighPerformance'   -- force dGPU (RTX 5070 Ti) over iGPU
 config.max_fps = 75                                  -- match panel max refresh
 config.animation_fps = 1                             -- minimal redraws for animations
 config.cursor_blink_rate = 0                         -- disable blink → no idle repaints
+
+config.webgpu_power_preference = 'LowPower'
+config.front_end = 'OpenGL'  -- bypass WebGPU entirely
 
 ----------------------------------------------------------
 --                  TABS & STATUS BAR                    -

@@ -168,6 +168,13 @@ function M.make()
         )
 end
 
+-- Map the same rhs to multiple key notations at once (e.g. terminal-dependent aliases)
+function M.set_multi_keymap(mode, keys, rhs, opts)
+    for _, key in ipairs(keys) do
+        vim.api.nvim_set_keymap(mode, key, rhs, opts or {})
+    end
+end
+
 M.toggle_qf = function()
     local qf_exists = false
     for _, win in pairs(vim.fn.getwininfo()) do

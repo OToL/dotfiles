@@ -105,10 +105,17 @@ M.setup = function()
         dap.terminate()
         dap.run_last()
     end)
+
     vim.keymap.set('n', '<M-F5>', function()
         dap.terminate()
         dap.run_last()
     end)
+    vim.keymap.set('n', '<M-F53>', function()
+        dap.terminate()
+        dap.run_last()
+    end)
+
+
     vim.keymap.set("n", "<Leader>dB", dap.clear_breakpoints, {})
 
     -- Auxiliary options

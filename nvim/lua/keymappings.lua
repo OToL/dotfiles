@@ -150,32 +150,25 @@ vim.keymap.set('n', "<leader>bk", function()
 end, { desc = "[B]uffer [K]ill all others" })
 
 -- Search
-vim.keymap.set('n', "<leader>sf", "<cmd>lua require('telescope.builtin').find_files({no_ignore=true,hidden=true})<cr>", { desc = "[S]earch [F]ile" })
+vim.keymap.set('n', "<leader>sf", function()
+    require('telescope.builtin').find_files({
+        find_command = { 'fd', '--type', 'f', '--hidden', '--no-ignore-vcs' },
+    })
+end, { desc = "[S]earch [F]ile" })
 vim.keymap.set('n', "<leader>sb", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "[S]earch [B]uffer" })
 vim.keymap.set('n', "<leader>so", "<cmd>Telescope oldfiles<cr>", { desc = "[S]earch [o]ld files" })
 vim.keymap.set('n', "<leader>sr", "<cmd>Telescope registers<cr>", { desc = "[S]earch [R]egister" })
 vim.keymap.set('n', "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "[S]earch [K]ey remapping" })
 vim.keymap.set('n', "<leader>sc", "<cmd>Telescope commands<cr>", { desc = "[S]earch [C]ommand" })
 vim.keymap.set('n', "<leader>sC", "<cmd>Telescope colorscheme<cr>", { desc = "[S]earch [C]olor scheme" })
+-- vim.keymap.set('n', "<leader>sm", "<cmd>Telescope marks<cr>", { desc = "[S]earch [m]arks" })
 vim.keymap.set('n', "<leader>sM", "<cmd>Telescope man_pages<cr>", { desc = "[S]earch [M]an page" })
--- vim.keymap.set("n", "<leader>sg", "<cmd>Telescope live_grep<cr>", { desc = "[S]earch string in current working directory as you type using [G]rep" })
 vim.keymap.set("n", "<leader>sg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set('n', "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "[S]earch [D]iagnostics" })
-
--- Workspaces
-vim.keymap.set('n', "<leader>wl", "<cmd>Telescope workspaces<CR>", { desc = "List available workspaces" })
 
 -- Cpp man
 vim.keymap.set("n", "<leader>cc", function() require('cppman').open_cppman_for(vim.fn.expand("<cword>")) end)
 vim.keymap.set("n", "<leader>cm", function() require('cppman').input() end)
-
--- Quick fix
-
--- Bookmarks
--- m; Toggle mark on current line
--- '<character> : Go to mark with <character> name
--- dm- Remove mark on current line
-vim.keymap.set("n", "dm<Space>", '<cmd>delmarks!<cr>')
 
 -- Misc
 vim.keymap.set('n', "<ESC>", "<cmd>noh<cr>", { desc = "Delete last search highlight" })

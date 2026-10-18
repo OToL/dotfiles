@@ -96,3 +96,11 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.opt_local.buflisted = false
   end,
 })
+
+-- Filter out quick fix from buffer list
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "qf",
+    callback = function()
+      vim.opt_local.buflisted = false
+    end,
+  })
