@@ -202,12 +202,14 @@ M.setup = function()
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-    --[[ local clangd_path = vim.fn.stdpath('data') .. '/mason/bin/clangd'
-    if vim.fn.filereadable(clangd_path) == 0 then
-        clangd_path = '/usr/local/bin/clangd';
-    end ]]
-    -- local clangd_path = '/usr/local/bin/clangd';
+    -- Hack because clangd from mason does not support c++ modules yet
     local clangd_path = "/Users/emmanuelbeau/Documents/dev/llvm-project/build/bin/clangd"
+    if require("utils").get_platform_name() == "windows" then
+        clangd_path = vim.fn.stdpath('data') .. '/mason/bin/clangd'
+        if vim.fn.filereadable(clangd_path) == 0 then
+            clangd_path = '/usr/local/bin/clangd';
+        end
+    end
 
     vim.lsp.config('clangd', {
         cmd = {
