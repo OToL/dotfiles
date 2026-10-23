@@ -19,13 +19,32 @@ config.color_scheme = 'Catppuccin Mocha'
 --                  PERFORMANCE                          -
 ----------------------------------------------------------
 
--- config.webgpu_power_preference = 'HighPerformance'   -- force dGPU (RTX 5070 Ti) over iGPU
-config.max_fps = 75                                  -- match panel max refresh
-config.animation_fps = 1                             -- minimal redraws for animations
-config.cursor_blink_rate = 0                         -- disable blink → no idle repaints
+-- Renderer
+config.front_end = "WebGpu" -- "OpenGL" | "WebGpu" | "Software"
+config.webgpu_power_preference = "HighPerformance"
 
-config.webgpu_power_preference = 'LowPower'
-config.front_end = 'OpenGL'  -- bypass WebGPU entirely
+-- Optional: pin a specific adapter/backend (see below for how to list them)
+for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
+  if gpu.backend == "Dx12" and gpu.device_type == "DiscreteGpu" then
+    config.webgpu_preferred_adapter = gpu
+    break
+  end
+end
+
+-- Frame pacing
+config.max_fps = 144        -- default 60; match your monitor
+config.animation_fps = 60   -- cursor blink / easing; 1 disables easing animations
+config.cursor_blink_rate = 0  -- optional: no blink = fewer redraws
+
+-- Throughput
+config.scrollback_lines = 10000
+
+-- Previous config
+-- config.max_fps = 75                                  -- match panel max refresh
+-- config.animation_fps = 1                             -- minimal redraws for animations
+-- config.cursor_blink_rate = 0                         -- disable blink → no idle repaints
+-- config.webgpu_power_preference = 'LowPower'
+-- config.front_end = 'OpenGL'  -- bypass WebGPU entirely
 
 ----------------------------------------------------------
 --                  TABS & STATUS BAR                    -
