@@ -19,9 +19,18 @@ config.color_scheme = 'Catppuccin Mocha'
 --                  PERFORMANCE                          -
 ----------------------------------------------------------
 
+local function on_battery()
+  for _, b in ipairs(wezterm.battery_info()) do
+    if b.state == 'Discharging' then return true end
+  end
+  return false -- no battery (desktop), charging, or full
+end
+
+-- Evaluated once at load; reload config (Ctrl+Shift+R) after plugging/unplugging
+local power_mode = on_battery() and 'battery' or 'plugged'
+
 -- Renderer
 config.front_end = "WebGpu" -- "OpenGL" | "WebGpu" | "Software"
-config.webgpu_power_preference = "HighPerformance"
 
 -- Optional: pin a specific adapter/backend (see below for how to list them)
 for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
@@ -32,19 +41,20 @@ for _, gpu in ipairs(wezterm.gui.enumerate_gpus()) do
 end
 
 -- Frame pacing
-config.max_fps = 144        -- default 60; match your monitor
-config.animation_fps = 60   -- cursor blink / easing; 1 disables easing animations
-config.cursor_blink_rate = 0  -- optional: no blink = fewer redraws
+config.cursor_blink_rate = 0  -- no blink = fewer redraws
+
+if power_mode == 'battery' then
+  config.webgpu_power_preference = "LowPower"
+  config.max_fps = 75         -- fewer frames when busy
+  config.animation_fps = 1    -- disables easing animations
+else
+  config.webgpu_power_preference = "HighPerformance"
+  config.max_fps = 144        -- default 60; match your monitor
+  config.animation_fps = 60
+end
 
 -- Throughput
 config.scrollback_lines = 10000
-
--- Previous config
--- config.max_fps = 75                                  -- match panel max refresh
--- config.animation_fps = 1                             -- minimal redraws for animations
--- config.cursor_blink_rate = 0                         -- disable blink → no idle repaints
--- config.webgpu_power_preference = 'LowPower'
--- config.front_end = 'OpenGL'  -- bypass WebGPU entirely
 
 ----------------------------------------------------------
 --                  TABS & STATUS BAR                    -
@@ -58,15 +68,21 @@ config.tab_max_width = 32
 
 wezterm.on('update-right-status', function(window, _pane)
   local workspace = window:active_workspace()
-  local date = wezterm.strftime('%Y-%m-%d')
-  local time = wezterm.strftime('%H:%M')
+  local datetime = wezterm.strftime('%Y-%m-%d %H:%M')
+
+  local mode_icon, mode_color
+  if power_mode == 'battery' then
+    mode_icon, mode_color = wezterm.nerdfonts.md_battery, 'Olive'
+  else
+    mode_icon, mode_color = wezterm.nerdfonts.md_power_plug, 'Lime'
+  end
 
   window:set_right_status(wezterm.format({
-    { Foreground = { AnsiColor = 'Fuchsia' } }, { Text = ' ' .. workspace .. ' ' },
-    { Foreground = { AnsiColor = 'Grey' } },    { Text = '│' },
-    { Foreground = { AnsiColor = 'Aqua' } },    { Text = ' ' .. date .. ' ' },
-    { Foreground = { AnsiColor = 'Grey' } },    { Text = '│' },
-    { Foreground = { AnsiColor = 'Yellow' } },  { Text = ' ' .. time .. ' ' },
+    { Foreground = { AnsiColor = mode_color } }, { Text = ' ' .. mode_icon .. ' ' .. power_mode .. ' ' },
+    { Foreground = { AnsiColor = 'Grey' } },     { Text = '│' },
+    { Foreground = { AnsiColor = 'Fuchsia' } },  { Text = ' ' .. wezterm.nerdfonts.md_briefcase .. ' ' .. workspace .. ' ' },
+    { Foreground = { AnsiColor = 'Grey' } },     { Text = '│' },
+    { Foreground = { AnsiColor = 'Aqua' } },     { Text = ' ' .. wezterm.nerdfonts.md_clock_outline .. ' ' .. datetime .. ' ' },
   }))
 end)
 
