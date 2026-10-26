@@ -1,5 +1,5 @@
 **/.DS_Store
 CMakeUserPresets.json
-lazy-lock.json
+*-lock.json
 .luarc.json
 .vscode/
