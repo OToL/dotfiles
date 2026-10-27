@@ -9,7 +9,7 @@ M.setup = function ()
         defaults = {
             vimgrep_arguments = {
                 'rg',
-                '--no-ignore', -- don't respect .gitignore
+                '--no-ignore-vcs', -- don't respect .gitignore, but respect .ignore
                 '--hidden',    -- include dotfiles
                 '--no-heading',
                 '--with-filename',
