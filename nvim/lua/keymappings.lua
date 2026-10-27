@@ -150,11 +150,7 @@ vim.keymap.set('n', "<leader>bk", function()
 end, { desc = "[B]uffer [K]ill all others" })
 
 -- Search
-vim.keymap.set('n', "<leader>sf", function()
-    require('telescope.builtin').find_files({
-        find_command = { 'fd', '--type', 'f', '--hidden', '--no-ignore-vcs' },
-    })
-end, { desc = "[S]earch [F]ile" })
+vim.keymap.set('n', "<leader>sf", function() require('fzf-lua').files() end, { desc = "[S]earch [F]ile" })
 vim.keymap.set('n', "<leader>sb", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "[S]earch [B]uffer" })
 vim.keymap.set('n', "<leader>so", "<cmd>Telescope oldfiles<cr>", { desc = "[S]earch [o]ld files" })
 vim.keymap.set('n', "<leader>sr", "<cmd>Telescope registers<cr>", { desc = "[S]earch [R]egister" })

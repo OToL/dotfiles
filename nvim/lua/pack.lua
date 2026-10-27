@@ -64,6 +64,7 @@ vim.pack.add({
     github("WhoIsSethDaniel/mason-tool-installer.nvim"),
     github("rmccord7/p4.nvim"),              -- depends on mega.*, nio, telescope
     github("nvim-telescope/telescope.nvim"),
+    github("ibhagwan/fzf-lua"),              -- file search only, see configs/fzf_lua.lua
     github("kevinhwang91/nvim-ufo"),         -- depends on promise async
     github("echasnovski/mini.statusline"),   -- depends on web devicons
     github("madskjeldgaard/cppman.nvim"),    -- depends on nui
@@ -99,6 +100,7 @@ vim.keymap.set('n', "<c-w>m", "<cmd>lua require('maximize').toggle()<cr>", { des
 require("configs.dial").setup()
 require("configs.oil").setup()
 require("configs.telescope").setup()
+require("configs.fzf_lua").setup()
 require("configs.autopairs").setup()
 require("configs.multicursor").setup()
 require("configs.dap").setup()

@@ -39,11 +39,11 @@ M.setup = function()
                 end,
                 desc = "Grep in current dir",
             },
-            -- Telescope find files from Oil's current directory
+            -- Find files from Oil's current directory
             ["<Leader>sf"] = {
                 callback = function()
                     local dir = require("oil").get_current_dir()
-                    require("telescope.builtin").find_files({ cwd = dir })
+                    require("fzf-lua").files({ cwd = dir })
                 end,
                 desc = "Find files in current dir",
             },

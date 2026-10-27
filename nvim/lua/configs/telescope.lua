@@ -23,14 +23,7 @@ M.setup = function ()
             prompt_prefix = "🔍 ",
             path_display = { "truncate" },
 
-            -- "%.o",
-            file_ignore_patterns = {
-                ".git", ".backup", ".swap", ".langservers", ".session", ".undo",
-                ".cache", ".vscode-server", "%.pdb", "%.cab", "%.exe", "%.csv",
-                "%.dll", "%.EXE", "%.bl", "%.a", "%.so", "%.lib", "%.msi",
-                ".vs", "%.mst", "%.zip", "%.7z", "%.doc", "%.docx", "%.obj", "%.lib",
-                "%.a", "%.bin"
-            },
+            -- no file_ignore_patterns: filtering is done by fd/rg through the project's .ignore file
 
             mappings = {
                 i = {
@@ -74,6 +67,7 @@ M.setup = function ()
         extensions = {
             live_grep_args = {
                 auto_quoting = true, -- enable/disable auto-quoting
+                debounce = 150,      -- ms to wait after the last keystroke before re-running rg
                 -- define mappings, e.g.
                 mappings = {         -- extend mappings
                     i = {
