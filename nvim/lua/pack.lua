@@ -70,6 +70,7 @@ vim.pack.add({
     github("madskjeldgaard/cppman.nvim"),    -- depends on nui
     github("akinsho/bufferline.nvim"),       -- depends on webicons
     github("ray-x/lsp_signature.nvim"),
+    github("MeanderingProgrammer/render-markdown.nvim"), -- depends on treesitter (markdown, markdown_inline), web devicons
     codeberg("andyg/leap.nvim"),
 })
 
@@ -164,6 +165,12 @@ require("marks").setup({
     vim.keymap.set('n', "<leader>sm", ":Telescope marks<cr>")
 
 require("configs.treesitter").setup()
+
+-- In-buffer Markdown rendering (raw text shown on the cursor line / in insert mode)
+require("render-markdown").setup({
+    completions = { lsp = { enabled = true } },
+})
+    vim.keymap.set('n', "<leader>tm", "<cmd>RenderMarkdown toggle<cr>", { desc = "Toggle Markdown rendering" })
 
 require("mason").setup({
     ui = { icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" } }
