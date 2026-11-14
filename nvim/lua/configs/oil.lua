@@ -1,5 +1,39 @@
 local M = {}
 
+-- copies the entry under cursor, or every entry in a visual selection (one per line),
+-- using a fnamemodify() modifier (same keys as the buffer ones in keymappings.lua)
+local function copy_entry(modifier)
+    return function()
+        local oil = require("oil")
+        local dir = oil.get_current_dir()
+        if not dir then return end
+
+        local first, last = vim.fn.line("."), vim.fn.line(".")
+        if vim.fn.mode():match("[vV\22]") then
+            first, last = vim.fn.line("v"), vim.fn.line(".")
+            if first > last then first, last = last, first end
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+        end
+
+        local values, seen = {}, {}
+        for lnum = first, last do
+            local entry = oil.get_entry_on_line(0, lnum)
+            if entry then
+                local value = vim.fn.fnamemodify(dir .. entry.name, modifier)
+                if not seen[value] then   -- e.g. `yd` gives the same dir for every entry
+                    seen[value] = true
+                    table.insert(values, value)
+                end
+            end
+        end
+        if #values == 0 then return end
+
+        local text = table.concat(values, "\n")
+        vim.fn.setreg("+", text)
+        vim.fn.setreg("0", text)
+    end
+end
+
 M.setup = function()
 
     require("oil").setup({
@@ -47,27 +81,11 @@ M.setup = function()
                 end,
                 desc = "Find files in current dir",
             },
-            -- Copy full path
-            ["<M-m>p"] = "actions.copy_entry_path",
-            -- Copy workspace (relative) path
-            ["<M-m>r"] = {
-                callback = function()
-                    local oil = require("oil")
-                    local entry = oil.get_cursor_entry()
-
-                    local dir = oil.get_current_dir()
-
-                    if not entry or not dir then
-                        return
-                    end
-
-                    local relpath = vim.fn.fnamemodify(dir, ":.")
-
-                    vim.fn.setreg("+", relpath .. entry.name)
-                    vim.fn.setreg("0",  relpath .. entry.name)
-                end,
-
-            },
+            -- Copy entry name / full path / workspace (relative) path / directory
+            ["<leader>yf"] = { callback = copy_entry(":t"),   mode = { "n", "x" }, desc = "Copy entry name(s)" },
+            ["<leader>yp"] = { callback = copy_entry(":p"),   mode = { "n", "x" }, desc = "Copy entry full path(s)" },
+            ["<leader>yr"] = { callback = copy_entry(":."),   mode = { "n", "x" }, desc = "Copy entry relative path(s)" },
+            ["<leader>yd"] = { callback = copy_entry(":p:h"), mode = { "n", "x" }, desc = "Copy entry directory" },
         },
     })
 

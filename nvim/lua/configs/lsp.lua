@@ -187,8 +187,21 @@ M.setup = function()
             local item     = vim.v.completed_item
             local lsp_item = vim.tbl_get(item, 'user_data', 'nvim', 'lsp', 'completion_item')
             if not lsp_item then return end
-            -- Function=3, Method=2, Constructor=4
             local kind = lsp_item.kind
+            -- File=17: clangd include completions insert the closing " or >,
+            -- drop the one nvim-autopairs already added
+            if kind == 17 then
+                vim.schedule(function()
+                    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+                    local line     = vim.api.nvim_get_current_line()
+                    local prev     = line:sub(col, col)
+                    if (prev == '"' or prev == '>') and line:sub(col + 1, col + 1) == prev then
+                        vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col + 1, { '' })
+                    end
+                end)
+                return
+            end
+            -- Function=3, Method=2, Constructor=4
             if kind ~= 2 and kind ~= 3 and kind ~= 4 then return end
             -- skip if LSP already sent a snippet (e.g. clangd's func($1, $2))
             if lsp_item.insertTextFormat == 2 then return end
