@@ -155,6 +155,27 @@ local function prompt_delete_workspace(window, pane, name)
   )
 end
 
+local function prompt_create_workspace(window, pane)
+  window:perform_action(
+    act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Foreground = { AnsiColor = 'Fuchsia' } },
+        { Text = 'New workspace name: ' },
+      },
+      action = wezterm.action_callback(function(win, p, line)
+        if line and line ~= '' then
+          -- creates the workspace if it doesn't exist, switches to it otherwise
+          win:perform_action(act.SwitchToWorkspace { name = line }, p)
+        else
+          win:perform_action(open_workspace_manager, p)
+        end
+      end),
+    },
+    pane
+  )
+end
+
 local kill_other_panes = wezterm.action_callback(function(window, pane)
   local cur_id = pane:pane_id()
   for _, p in ipairs(window:active_tab():panes()) do
@@ -191,10 +212,18 @@ open_workspace_manager = wezterm.action_callback(function(window, pane)
     act.InputSelector {
       title = 'Workspaces',
       fuzzy = true,
-      description = 'Enter: switch  │  Ctrl+R: rename  │  Ctrl+C: delete  │  Esc: cancel',
+      description = 'Enter: switch  │  Ctrl+N: new  │  Ctrl+R: rename  │  Ctrl+C: delete  │  Esc: cancel',
+      -- shown instead of description while fuzzy matching is active
+      fuzzy_description = 'Enter: switch  │  Ctrl+N: new  │  Ctrl+R: rename  │  Ctrl+C: delete  │  Esc: cancel  │  Filter: ',
       choices = choices,
       action = wezterm.action_callback(function(win, p, id, _label)
         win:perform_action(act.PopKeyTable, p)
+        -- before the id check: creating doesn't need a selected entry
+        if pending_workspace_action == 'create' then
+          pending_workspace_action = nil
+          prompt_create_workspace(win, p)
+          return
+        end
         if not id then
           pending_workspace_action = nil
           return
@@ -220,6 +249,11 @@ end)
 
 config.key_tables = {
   workspace_manager = {
+    { key = 'n', mods = 'CTRL', action = wezterm.action_callback(function(win, pane)
+      pending_workspace_action = 'create'
+      win:perform_action(act.PopKeyTable, pane)
+      win:perform_action(act.SendKey { key = 'Enter' }, pane)
+    end) },
     { key = 'c', mods = 'CTRL', action = wezterm.action_callback(function(win, pane)
       pending_workspace_action = 'delete'
       win:perform_action(act.PopKeyTable, pane)
@@ -278,16 +312,35 @@ local function smart_resize(dir)
   end)
 end
 
+-- Yazi toggle: one yazi tab per window (so per workspace).
+-- From any tab: go to the yazi tab, spawning it if needed. From the yazi tab: back to the previous tab.
+local YAZI_TITLE = 'yazi'
+local toggle_yazi = wezterm.action_callback(function(window, pane)
+  local mux_win = window:mux_window()
+
+  if mux_win:active_tab():get_title() == YAZI_TITLE then
+    window:perform_action(act.ActivateLastTab, pane)
+    return
+  end
+
+  for _, tab in ipairs(mux_win:tabs()) do
+    if tab:get_title() == YAZI_TITLE then
+      tab:activate()
+      return
+    end
+  end
+
+  local tab = mux_win:spawn_tab { args = { 'yazi' } }
+  tab:set_title(YAZI_TITLE)
+end)
+
 config.leader = { key = 'Space', mods = 'CTRL', timeout_milliseconds = 1000 }
 
 config.keys = {
     -- base
-    { key = 'l', mods = 'LEADER', action = open_workspace_manager },
-    { key = 'w', mods = 'LEADER', action = act.CloseCurrentPane { confirm = false } },
-    { key = 'v', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-    { key = 's', mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
-    { key = 'm', mods = 'LEADER', action = act.TogglePaneZoomState },
-    { key = 'o', mods = 'LEADER', action = kill_other_panes },
+    { key = 'w', mods = 'CTRL|SHIFT', action = open_workspace_manager },
+    { key = 'o', mods = 'CTRL|SHIFT', action = kill_other_panes },
+    { key = 'y', mods = 'CTRL|SHIFT', action = toggle_yazi },
     { key = 'h', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Left' },
     { key = 'j', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Down' },
     { key = 'k', mods = 'CTRL|SHIFT', action = act.ActivatePaneDirection 'Up' },

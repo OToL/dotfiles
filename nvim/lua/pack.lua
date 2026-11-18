@@ -96,7 +96,7 @@ require("nvim-web-devicons").set_icon({
 require("configs.mini_statusline").setup()
 
 require("configs.maximize").setup()
-vim.keymap.set('n', "<c-w>m", "<cmd>lua require('maximize').toggle()<cr>", { desc = "Toggle maximize" })
+vim.keymap.set('n', "<c-w>z", "<cmd>lua require('maximize').toggle()<cr>", { desc = "Toggle maximize" })
 
 require("configs.dial").setup()
 require("configs.oil").setup()
