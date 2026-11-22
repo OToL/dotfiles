@@ -73,6 +73,22 @@ vim.api.nvim_create_user_command("BufCloseNonWorkspace", function()
     end
   end, {})
 
+vim.api.nvim_create_user_command('Hterm', function()
+    vim.cmd('split | terminal')
+    vim.cmd.startinsert()
+end, { desc = 'Split horizontally and open a terminal.' })
+
+vim.api.nvim_create_user_command('Vterm', function()
+    vim.cmd('vsplit | terminal')
+    vim.cmd.startinsert()
+end, { desc = 'Split vertically and open a terminal.' })
+
+-- lowercase aliases, only expanded when typed as the whole command
+vim.cmd [[
+  cnoreabbrev <expr> hterm getcmdtype() == ':' && getcmdline() ==# 'hterm' ? 'Hterm' : 'hterm'
+  cnoreabbrev <expr> vterm getcmdtype() == ':' && getcmdline() ==# 'vterm' ? 'Vterm' : 'vterm'
+]]
+
 --------------------------------------------------------------------------------------------------------
 ---                                                                                                  --- 
 ---                                    AUTO COMMANDS                                                 ---

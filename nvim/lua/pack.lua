@@ -72,6 +72,7 @@ vim.pack.add({
     github("ray-x/lsp_signature.nvim"),
     github("MeanderingProgrammer/render-markdown.nvim"), -- depends on treesitter (markdown, markdown_inline), web devicons
     codeberg("andyg/leap.nvim"),
+    github("coder/claudecode.nvim"),         -- Claude Code IDE integration, native terminal (no snacks)
 })
 
 -- internal opt-in plugins
@@ -95,9 +96,6 @@ require("nvim-web-devicons").set_icon({
 })
 require("configs.mini_statusline").setup()
 
-require("configs.maximize").setup()
-vim.keymap.set('n', "<c-w>z", "<cmd>lua require('maximize').toggle()<cr>", { desc = "Toggle maximize" })
-
 require("configs.dial").setup()
 require("configs.oil").setup()
 require("configs.telescope").setup()
@@ -109,6 +107,38 @@ require("colorizer").setup()
 require("fidget").setup()
 require("Comment").setup()
 require("catppuccin").setup()
+
+require("claudecode").setup({
+        terminal = {
+            provider = "native",
+            split_side = "right",
+            split_width_percentage = 0.4,
+        }})
+    vim.keymap.set('n', "<leader>ic", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude" })
+    vim.keymap.set({ 'n', 't' }, "<C-,>", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude (also from its terminal)" })
+    vim.keymap.set('n', "<leader>if", "<cmd>ClaudeCodeFocus<cr>", { desc = "Focus Claude" })
+    vim.keymap.set('n', "<leader>ir", "<cmd>ClaudeCode --resume<cr>", { desc = "Resume Claude" })
+    vim.keymap.set('n', "<leader>ib", "<cmd>ClaudeCodeAdd %<cr>", { desc = "Add current buffer to Claude" })
+    vim.keymap.set('v', "<leader>is", "<cmd>ClaudeCodeSend<cr>", { desc = "Send selection to Claude" })
+    vim.keymap.set('n', "<leader>ia", "<cmd>ClaudeCodeDiffAccept<cr>", { desc = "Accept Claude diff" })
+    vim.keymap.set('n', "<leader>id", "<cmd>ClaudeCodeDiffDeny<cr>", { desc = "Deny Claude diff" })
+    -- re-send the current file as editor context: Claude Code drops a repeat of the same file,
+    -- so send an empty update first, then the current one
+    vim.keymap.set('n', "<leader>ie", function()
+        local sel = require("claudecode.selection")
+        sel.send_selection_update({
+            text = "", filePath = "", fileUrl = "",
+            selection = { start = { line = 0, character = 0 }, ["end"] = { line = 0, character = 0 }, isEmpty = true },
+        })
+        vim.defer_fn(sel.send_current_selection, 200)
+    end, { desc = "Re-send editor context to Claude" })
+
+require('maximize').setup({
+        plugins = {
+            dapui = { enable = true },
+        }
+    })
+    vim.keymap.set('n', "<c-w>z", "<cmd>lua require('maximize').toggle()<cr>", { desc = "Toggle maximize" })
 
 -- has to be before buffer line
 vim.cmd.colorscheme("catppuccin")
