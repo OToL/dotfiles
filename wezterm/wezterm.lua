@@ -330,7 +330,11 @@ local toggle_yazi = wezterm.action_callback(function(window, pane)
     end
   end
 
-  local tab = mux_win:spawn_tab { args = { 'yazi' } }
+  -- macOS/Linux: run through a login shell, GUI-launched WezTerm doesn't get the user PATH (e.g. Homebrew)
+  local yazi_args = wezterm.target_triple:find('windows')
+      and { 'yazi' }
+      or { os.getenv('SHELL') or '/bin/sh', '-lc', 'yazi' }
+  local tab = mux_win:spawn_tab { args = yazi_args }
   tab:set_title(YAZI_TITLE)
 end)
 
