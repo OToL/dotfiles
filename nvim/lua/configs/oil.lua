@@ -81,11 +81,12 @@ M.setup = function()
                 end,
                 desc = "Find files in current dir",
             },
-            -- Copy entry name / full path / workspace (relative) path / directory
-            ["<leader>yf"] = { callback = copy_entry(":t"),   mode = { "n", "x" }, desc = "Copy entry name(s)" },
-            ["<leader>yp"] = { callback = copy_entry(":p"),   mode = { "n", "x" }, desc = "Copy entry full path(s)" },
-            ["<leader>yr"] = { callback = copy_entry(":."),   mode = { "n", "x" }, desc = "Copy entry relative path(s)" },
-            ["<leader>yd"] = { callback = copy_entry(":p:h"), mode = { "n", "x" }, desc = "Copy entry directory" },
+            -- Copy entry name / full path / relative path / full dir / relative dir
+            ["<leader>yf"] = { callback = copy_entry(":t"),      mode = { "n", "x" }, desc = "Copy entry name(s)" },
+            ["<leader>yp"] = { callback = copy_entry(":p"),      mode = { "n", "x" }, desc = "Copy entry full path(s)" },
+            ["<leader>yP"] = { callback = copy_entry(":."),      mode = { "n", "x" }, desc = "Copy entry relative path(s)" },
+            ["<leader>yd"] = { callback = copy_entry(":p:h"),    mode = { "n", "x" }, desc = "Copy entry full dir(s)" },
+            ["<leader>yD"] = { callback = copy_entry(":p:.:h"),  mode = { "n", "x" }, desc = "Copy entry relative dir(s)" },
         },
     })
 

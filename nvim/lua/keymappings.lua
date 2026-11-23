@@ -113,16 +113,22 @@ vim.keymap.set('n', "<leader>yp", function()
     vim.fn.setreg("0", full_path)
 end, { expr = true, noremap = true })
 -- Copy current buffer workspace relative path to clipboard
-vim.keymap.set('n', "<leader>yr", function()
+vim.keymap.set('n', "<leader>yP", function()
     local rel_path = vim.fn.expand('%:.')
     vim.fn.setreg("+", rel_path)
     vim.fn.setreg("0", rel_path)
 end, { expr = true, noremap = true })
--- Copy current buffer directory path to clipboard 
+-- Copy current buffer directory path to clipboard
 vim.keymap.set('n', "<leader>yd", function()
     local dir_path = vim.fn.expand('%:p:h')
     vim.fn.setreg("+", dir_path)
     vim.fn.setreg("0", dir_path)
+end, { expr = true, noremap = true })
+-- Copy current buffer workspace relative directory path to clipboard
+vim.keymap.set('n', "<leader>yD", function()
+    local rel_dir_path = vim.fn.expand('%:p:.:h')
+    vim.fn.setreg("+", rel_dir_path)
+    vim.fn.setreg("0", rel_dir_path)
 end, { expr = true, noremap = true })
 
 -- navigate buffers
