@@ -163,8 +163,7 @@ vim.keymap.set('n', "<leader>sr", "<cmd>Telescope registers<cr>", { desc = "[S]e
 vim.keymap.set('n', "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "[S]earch [K]ey remapping" })
 vim.keymap.set('n', "<leader>sc", "<cmd>Telescope commands<cr>", { desc = "[S]earch [C]ommand" })
 vim.keymap.set('n', "<leader>sC", "<cmd>Telescope colorscheme<cr>", { desc = "[S]earch [C]olor scheme" })
--- vim.keymap.set('n', "<leader>sm", "<cmd>Telescope marks<cr>", { desc = "[S]earch [m]arks" })
-vim.keymap.set('n', "<leader>sM", "<cmd>Telescope man_pages<cr>", { desc = "[S]earch [M]an page" })
+vim.keymap.set('n', "<leader>sm", "<cmd>Telescope man_pages<cr>", { desc = "[S]earch [m]an page" })
 vim.keymap.set("n", "<leader>sg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set('n', "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "[S]earch [D]iagnostics" })
 

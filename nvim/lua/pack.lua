@@ -176,23 +176,7 @@ require('smart-splits').setup(
     vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
     vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
 
--- m; : Toggle mark on current line
--- '<character> : Go to mark with <character> name
--- dm- : Remove mark on current line
--- ]b [b : prev/next bookmark
-require("marks").setup({
-    default_mappings = false,
-    force_write_shada = true,
-    mappings =
-    {
-        next = "]b",
-        prev = "[b",
-        toggle = "m;",
-        delete_line = "dm",
-        delete_buf = "dM",
-    }
-    })
-    vim.keymap.set('n', "<leader>sm", ":Telescope marks<cr>")
+require("configs.marks").setup()
 
 require("configs.treesitter").setup()
 
