@@ -14,6 +14,7 @@ M.setup = function ()
                 local fileinfo      = statusline.section_fileinfo({ trunc_width = 120 })
                 local location      = statusline.section_location({ trunc_width = 75 })
                 local search        = statusline.section_searchcount({ trunc_width = 75 })
+                local unreal        = statusline.is_truncated(140) and '' or require('configs.udev').preset_label()
 
                 -- Add recording indicator
                 local recording = vim.fn.reg_recording()
@@ -28,7 +29,7 @@ M.setup = function ()
                     { hl = 'MiniStatuslineFilename', strings = { filename } },
                     '%=', -- End left alignment
                     { hl = 'MiniStatuslineFilename', strings = { recording } },
-                    { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
+                    { hl = 'MiniStatuslineFileinfo', strings = { unreal, fileinfo } },
                     { hl = mode_hl,                  strings = { search, location } },
                 })
             end,

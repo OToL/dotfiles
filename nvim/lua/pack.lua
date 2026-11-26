@@ -11,6 +11,10 @@ vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
         utils.run_cmd_sync({ 'cmake', '--install', 'build', '--prefix', 'build' }, plugin_path)
     end
 
+    if name == 'UNL.nvim' then
+        require("utils").run_cmd_sync({ 'cargo', 'build', '--release', '--manifest-path', 'scanner/Cargo.toml' }, ev.data.path)
+    end
+
     if name == 'nvim-treesitter' and kind == 'update' then
         if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
         vim.cmd('TSUpdate')
@@ -73,6 +77,10 @@ vim.pack.add({
     github("MeanderingProgrammer/render-markdown.nvim"), -- depends on treesitter (markdown, markdown_inline), web devicons
     codeberg("andyg/leap.nvim"),
     github("coder/claudecode.nvim"),         -- Claude Code IDE integration, native terminal (no snacks)
+    github("taku25/UNL.nvim"),               -- UnrealDev core, Rust scanner built on PackChanged
+    github("taku25/UnrealDev.nvim"),         -- depends on UNL
+    github("taku25/UEP.nvim"),               -- depends on UNL
+    github("taku25/UBT.nvim"),               -- depends on UNL
 })
 
 -- internal opt-in plugins
@@ -211,3 +219,4 @@ require("mason-tool-installer").setup({
     }
 })
 require("configs.lsp").setup()
+require("configs.udev").setup()
