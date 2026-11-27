@@ -355,6 +355,12 @@ config.keys = {
     { key = 'DownArrow',  mods = 'CTRL|SHIFT', action = smart_resize('Down') },
 }
 
+-- Windows: ConPTY has no encoding for CTRL+, and delivers it as ^L, so send CTRL+F12 instead
+-- (nvim maps both to the Claude Code toggle)
+if wezterm.target_triple:find('windows') then
+  table.insert(config.keys, { key = ',', mods = 'CTRL', action = act.SendKey { key = 'F12', mods = 'CTRL' } })
+end
+
 for i = 1, 9 do
   table.insert(config.keys, {
     key = tostring(i),

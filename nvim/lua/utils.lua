@@ -171,7 +171,7 @@ end
 -- Map the same rhs to multiple key notations at once (e.g. terminal-dependent aliases)
 function M.set_multi_keymap(mode, keys, rhs, opts)
     for _, key in ipairs(keys) do
-        vim.api.nvim_set_keymap(mode, key, rhs, opts or {})
+        vim.keymap.set(mode, key, rhs, opts)
     end
 end
 

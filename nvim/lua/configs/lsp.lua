@@ -218,10 +218,8 @@ M.setup = function()
     -- Hack because clangd from mason does not support c++ modules yet
     local clangd_path = "/Users/emmanuelbeau/Documents/dev/llvm-project/build/bin/clangd"
     if require("utils").get_platform_name() == "windows" then
-        clangd_path = vim.fn.stdpath('data') .. '/mason/bin/clangd'
-        if vim.fn.filereadable(clangd_path) == 0 then
-            clangd_path = '/usr/local/bin/clangd';
-        end
+        -- mason installs a .cmd wrapper on Windows
+        clangd_path = vim.fn.stdpath('data') .. '/mason/bin/clangd.cmd'
     end
 
     vim.lsp.config('clangd', {
@@ -229,6 +227,7 @@ M.setup = function()
             clangd_path,
             '--header-insertion=never',
             '--background-index',
+            '--background-index-priority=low',
             '--completion-style=detailed',
         },
         filetypes    = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },

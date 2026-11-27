@@ -123,7 +123,10 @@ require("claudecode").setup({
             split_width_percentage = 0.4,
         }})
     vim.keymap.set('n', "<leader>ic", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude" })
-    vim.keymap.set({ 'n', 't' }, "<C-,>", "<cmd>ClaudeCode<cr>", { desc = "Toggle Claude (also from its terminal)" })
+    -- Windows: WezTerm sends CTRL+, as CTRL+F12 since ConPTY can't carry CTRL+, (see .wezterm.lua);
+    -- nvim decodes CTRL+F12 (CSI 24;5~) as <F36> via xterm terminfo
+    require("utils").set_multi_keymap({ 'n', 't' }, { "<C-,>", "<F36>" }, "<cmd>ClaudeCode<cr>",
+        { desc = "Toggle Claude (also from its terminal)" })
     vim.keymap.set('n', "<leader>if", "<cmd>ClaudeCodeFocus<cr>", { desc = "Focus Claude" })
     vim.keymap.set('n', "<leader>ir", "<cmd>ClaudeCode --resume<cr>", { desc = "Resume Claude" })
     vim.keymap.set('n', "<leader>ib", "<cmd>ClaudeCodeAdd %<cr>", { desc = "Add current buffer to Claude" })
@@ -146,6 +149,17 @@ require('maximize').setup({
             dapui = { enable = true },
         }
     })
+    -- maximize.nvim force-deletes every buffer with a non-empty 'bufhidden' before saving its session,
+    -- which kills claudecode's terminal (bufhidden=hide) and its job. Treat terminals as restorable:
+    -- the session restores them with `buffer term://...` when the buffer exists, so the same job is reused.
+    local maximize_utils = require('maximize.utils')
+    local is_restorable = maximize_utils.is_restorable
+    maximize_utils.is_restorable = function(buffer)
+        if vim.bo[buffer].buftype == 'terminal' then
+            return true
+        end
+        return is_restorable(buffer)
+    end
     vim.keymap.set('n', "<c-w>z", "<cmd>lua require('maximize').toggle()<cr>", { desc = "Toggle maximize" })
 
 -- has to be before buffer line

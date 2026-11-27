@@ -149,11 +149,13 @@ vim.keymap.set('n', "<leader>bf", "<cmd>Telescope current_buffer_fuzzy_find<CR>"
 vim.keymap.set('n', "<leader>bk", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if buf ~= current then
-            vim.api.nvim_buf_delete(buf, { force = false })
+        -- only listed normal buffers: keep terminals (Claude Code, :terminal), help, quickfix and plugin buffers
+        -- modified buffers are kept; pcall so an unexpected refusal does not abort the loop
+        if buf ~= current and vim.bo[buf].buftype == "" and vim.bo[buf].buflisted and not vim.bo[buf].modified then
+            pcall(vim.api.nvim_buf_delete, buf, { force = false })
         end
     end
-end, { desc = "[B]uffer [K]ill all others" })
+end, { desc = "[B]uffer [K]ill all other file buffers" })
 
 -- Search
 vim.keymap.set('n', "<leader>sf", function() require('fzf-lua').files() end, { desc = "[S]earch [F]ile" })

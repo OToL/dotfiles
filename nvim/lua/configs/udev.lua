@@ -11,6 +11,55 @@ M.setup = function()
         ui = { picker = { mode = "fzf-lua" }, grep_picker = { mode = "fzf-lua" } },
     })
 
+    -- workspace revision for UNL's auto-refresh, queried on every BufReadPost: keep it for git (rev-parse is cheap);
+    -- elsewhere UNL falls through to svn and `p4 changes -m1 #have` (a full have-list scan, 15-20s here),
+    -- so skip it: refresh manually with :UNL refresh after syncing
+    local vcs = require("UNL.vcs")
+    local get_current_hash = vcs.get_current_hash
+    vcs.get_current_hash = function(root)
+        if root and vim.fs.root(root, ".git") then return get_current_hash(root) end
+        return nil
+    end
+
+    -- the scanner (unl-server) checks the workspace revision itself with `p4 changes -m1 -s submitted <root>/...`,
+    -- the latest submit by anyone, so nearly every refresh takes its "incremental game refresh" path, which returns
+    -- before the engine walk: start it without p4 on PATH so it falls back to a full, mtime-based walk
+    local jobstart = vim.fn.jobstart
+    vim.fn.jobstart = function(cmd, opts)
+        if type(cmd) == "table" and tostring(cmd[1]):match("unl%-server[^/\\]*$") then
+            local is_win = vim.fn.has("win32") == 1
+            local sep, exe = is_win and ";" or ":", is_win and "p4.exe" or "p4"
+            local dirs = vim.tbl_filter(function(dir)
+                return not vim.uv.fs_stat(vim.fs.joinpath(dir, exe))
+            end, vim.split(vim.env.PATH or "", sep, { trimempty = true }))
+            opts = vim.tbl_extend("force", opts or {}, {
+                env = vim.tbl_extend("force", (opts or {}).env or {}, { PATH = table.concat(dirs, sep) }),
+            })
+        end
+        return jobstart(cmd, opts)
+    end
+
+    -- workspace root layout (Engine/ + HighballGame/ side by side): UNL only searches parent folders
+    -- for a .uproject, so fall back to "uproject" from the workspace .unlrc.json
+    local project = require("UNL.finder.project")
+    local find_project = project.find_project
+    project.find_project = function(start_path, opts)
+        local res = find_project(start_path, opts)
+        if res then return res end
+        local uproject = require("UNL.config").get("UNL").uproject
+        if uproject and vim.uv.fs_stat(uproject) then
+            uproject = vim.fs.normalize(uproject)
+            return { root = vim.fs.dirname(uproject), uproject = uproject }
+        end
+    end
+    -- these call the module's local locate(), not find_project, so route them through the fallback
+    project.find_project_root = function(p, o) local r = project.find_project(p, o); return r and r.root end
+    project.find_project_file = function(p, o) local r = project.find_project(p, o); return r and r.uproject end
+    project.find_from_current_buffer = function(o)
+        local path = vim.api.nvim_buf_get_name(0)
+        return project.find_project(path ~= "" and path or vim.uv.cwd(), o)
+    end
+
     -- macOS: UNL has no engine lookup; offer the cwd if it is an engine root,
     -- else engine_path from the workspace .unlrc.json
     local installed = require("UNL.finder.engine_installed")
@@ -54,7 +103,8 @@ M.setup = function()
         local db = vim.json.decode(table.concat(vim.fn.readfile(db_path), "\n"))
         for _, entry in ipairs(db) do
             if entry.file:match("%.gen%.cpp$") then
-                local source = vim.fs.basename(entry.output):gsub("%.o$", "")
+                -- object file is .obj on Windows, .o elsewhere
+                local source = vim.fs.basename(entry.output):gsub("%.obj$", ""):gsub("%.o$", "")
                 local rsp = io.open(vim.fs.joinpath(entry.directory, entry.command:match('@"(.-)"')))
                 if rsp then
                     rsp:seek("end", -math.min(1024, rsp:seek("end")))
