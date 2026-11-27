@@ -94,6 +94,24 @@ M.setup = function()
         return start(name, cmd, opts)
     end
 
+    -- UBT.nvim derives the target of a preset without TargetName from fnamemodify(uproject, ":r"), the full path
+    -- minus the extension (D:/.../HighballGame/HighballEditor): give it the .uproject file name instead
+    local ubt_core = require("UBT.cmd.core")
+    local get_preset_from_label = ubt_core.get_preset_from_label
+    ubt_core.get_preset_from_label = function(preset_name, callback)
+        get_preset_from_label(preset_name, function(preset)
+            if preset and not preset.TargetName then
+                local uproject = require("UNL.finder").project.find_project_file(vim.uv.cwd())
+                if uproject then
+                    local name = vim.fn.fnamemodify(uproject, ":t:r")
+                    -- copy: the preset may be the config's own table
+                    preset = vim.tbl_extend("force", preset, { TargetName = preset.IsEditor and (name .. "Editor") or name })
+                end
+            end
+            callback(preset)
+        end)
+    end
+
     -- UBT records sources using UE_INLINE_GENERATED_CPP_BY_NAME under their .gen.cpp:
     -- point those entries back to the real source (listed at the end of the entry's response file),
     -- then restart clangd to load the new database
@@ -133,6 +151,77 @@ M.setup = function()
         refresh()
         return ok
     end
+
+    -- <leader>u: Unreal (go-to-definition and references are left to clangd)
+    local maps = {
+        { "<leader>uf", "UEP files",            "[U]nreal [F]iles" },
+        { "<leader>um", "UEP module_files",     "[U]nreal [M]odule files" },
+        { "<leader>ug", "UEP grep",             "[U]nreal [G]rep" },
+        { "<leader>uc", "UEP classes",          "[U]nreal [C]lasses" },
+        { "<leader>ud", "UEP find_derived",     "[U]nreal find [D]erived classes" },
+        { "<leader>up", "UEP find_parents",     "[U]nreal find [P]arent classes" },
+        { "<leader>ui", "UEP add_include",      "[U]nreal add [I]nclude" },
+        { "<leader>ub", "UBT build",            "[U]nreal [B]uild" },
+        -- picker: the chosen preset becomes the one <leader>ub builds (and the statusline label) for this session
+        { "<leader>uB", "UBT build!",           "[U]nreal [B]uild, pick preset" },
+        { "<leader>ux", "UBT cancel_build",     "[U]nreal cancel build ([x])" },
+        { "<leader>ue", "UBT diagnostics",      "[U]nreal build [E]rrors" },
+        -- pinned preset: clangd (and the static engine index) stay on Editor Development whatever gets built;
+        -- an explicit preset is not remembered as last_preset, unlike the build! picker
+        { "<leader>uj", "UBT gen_compile_db Win64DevelopWithEditor", "[U]nreal generate compile_commands.[j]son" },
+        -- picker, for another configuration on purpose: the chosen preset also becomes the last_preset that
+        -- <leader>ub builds and the statusline shows
+        { "<leader>uJ", "UBT gen_compile_db!",  "[U]nreal generate compile_commands.[j]son, pick preset" },
+        -- the automatic refresh is disabled above (p4 is too slow), so refresh after syncing
+        { "<leader>ur", "UNL refresh",          "[U]nreal [R]efresh project scan" },
+    }
+    for _, map in ipairs(maps) do
+        vim.keymap.set('n', map[1], "<cmd>" .. map[2] .. "<cr>", { desc = map[3] })
+    end
+
+    -- pick the preset <leader>ub/<leader>uC use (and the statusline shows) without running anything:
+    -- the same picker as build!, it only stores last_preset for this session
+    vim.keymap.set('n', "<leader>us", function()
+        require("UBT.model").get_presets(function(presets)
+            require("UNL.picker").open({
+                kind = "ubt_select_preset",
+                title = "  UBT Preset",
+                conf = require("UNL.config").get("UBT"),
+                items = presets,
+                logger_name = "UBT",
+                format = function(entry) return entry.name end,
+                preview_enabled = false,
+                on_submit = function(selected)
+                    if selected then context.set("last_preset", selected.name) end
+                end,
+            })
+        end)
+    end, { desc = "[U]nreal [S]elect build preset" })
+
+    -- UBT.nvim has no clean command: run UBT's Clean mode for the preset <leader>ub builds, through UBT.nvim's own
+    -- command builder and job runner, so the launch script, engine root and uproject resolve as for a build
+    -- (cmd.exe + its script on Windows, RunUBT.sh on macOS via the runner override above)
+    vim.keymap.set('n', "<leader>uC", function()
+        if runner.is_running() then
+            return vim.notify("UBT: a job is already running", vim.log.levels.WARN)
+        end
+        local opts, err = ubt_core.ensure_command_args({}, "Clean")
+        if not opts then
+            return vim.notify("UBT clean: " .. err, vim.log.levels.ERROR)
+        end
+        -- a source engine is not read-only for UBT, so this deletes the engine and plugin intermediates and binaries
+        -- of the target/configuration too, plus the target's generated headers (shared by its configurations)
+        local choice = vim.fn.confirm(("Clean %s?\nDeletes engine and game intermediates and binaries for this "
+            .. "target/configuration: the next build recompiles everything."):format(opts.label), "&Yes\n&No", 2)
+        if choice ~= 1 then return end
+        ubt_core.create_command_with_target_platforms(opts, { "-WaitMutex" }, function(cmd, cmd_err)
+            if not cmd then
+                return vim.notify("UBT clean: " .. tostring(cmd_err), vim.log.levels.ERROR)
+            end
+            -- runner.start is the wrapped one above (RunUBT.sh on macOS)
+            runner.start("Clean", cmd, { label = opts.label })
+        end)
+    end, { desc = "[U]nreal [C]lean build preset (engine + game)" })
 end
 
 -- statusline text for the current UBT preset (last used, else preset_target), "" outside an Unreal project;

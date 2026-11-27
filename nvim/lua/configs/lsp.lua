@@ -215,7 +215,7 @@ M.setup = function()
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-    -- Hack because clangd from mason does not support c++ modules yet
+    -- macOS: custom clangd build, since mason's clangd did not support C++ modules yet
     local clangd_path = "/Users/emmanuelbeau/Documents/dev/llvm-project/build/bin/clangd"
     if require("utils").get_platform_name() == "windows" then
         -- mason installs a .cmd wrapper on Windows
@@ -229,6 +229,8 @@ M.setup = function()
             '--background-index',
             '--background-index-priority=low',
             '--completion-style=detailed',
+            -- clangd logs to stderr, which nvim records in lsp.log as [ERROR]: keep only real errors
+            '--log=error',
         },
         filetypes    = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
         root_markers = { '.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac', '.git' },
